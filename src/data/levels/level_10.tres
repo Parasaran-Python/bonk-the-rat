@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="LevelConfig" format=3]
+
+[ext_resource type="Script" path="res://src/data/level_config.gd" id="1_qifx8"]
+
+[resource]
+script = ExtResource("1_qifx8")
+level_id = 10
+duration_s = 60.0
+grid_rows = 3
+max_concurrent = 4
+spawn_interval_start = 0.9
+spawn_interval_end = 0.58
+rat_weights = {
+"clock": 3,
+"golden": 5,
+"norm": 48,
+"star": 4,
+"tank": 13,
+"whiskers": 7,
+"zoomer": 15
+}
+quota_star1 = 6000
+quota_star2 = 9500
+quota_star3 = 13800
+zone_theme = 2
+music_track = "zone2"

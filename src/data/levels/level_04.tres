@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="LevelConfig" format=3]
+
+[ext_resource type="Script" path="res://src/data/level_config.gd" id="1_auiin"]
+
+[resource]
+script = ExtResource("1_auiin")
+level_id = 4
+duration_s = 55.0
+grid_rows = 3
+max_concurrent = 3
+spawn_interval_start = 1.15
+spawn_interval_end = 0.8
+rat_weights = {
+"norm": 84,
+"star": 4,
+"whiskers": 4,
+"zoomer": 8
+}
+quota_star1 = 2100
+quota_star2 = 3500
+quota_star3 = 5200

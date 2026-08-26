@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="LevelConfig" format=3]
+
+[ext_resource type="Script" path="res://src/data/level_config.gd" id="1_pqwr1"]
+
+[resource]
+script = ExtResource("1_pqwr1")
+level_id = 7
+duration_s = 55.0
+grid_rows = 3
+max_concurrent = 3
+spawn_interval_start = 1.0
+spawn_interval_end = 0.68
+rat_weights = {
+"norm": 64,
+"star": 4,
+"tank": 9,
+"whiskers": 6,
+"zoomer": 13
+}
+quota_star1 = 3800
+quota_star2 = 6100
+quota_star3 = 8900
+zone_theme = 2
+music_track = "zone2"
