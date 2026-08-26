@@ -7,6 +7,7 @@ const SCREENS := [
 	"res://src/screens/level_select.tscn",
 	"res://src/screens/results.tscn",
 	"res://src/screens/settings_screen.tscn",
+	"res://src/screens/tutorial.tscn",
 	"res://src/game/game_screen.tscn",
 	"res://src/game/hud.tscn",
 ]
