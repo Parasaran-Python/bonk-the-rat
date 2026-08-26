@@ -77,11 +77,17 @@ func _restart_level() -> void:
 
 func _quit_to_map() -> void:
 	if has_node("/root/SceneRouter"):
-		get_node("/root/SceneRouter").goto("res://src/screens/zone_map.tscn")
+		if _mode == "endless":
+			get_node("/root/SceneRouter").goto("res://src/screens/main_menu.tscn")
+		else:
+			get_node("/root/SceneRouter").goto("res://src/screens/zone_map.tscn")
 
 func _on_level_ended(result: Dictionary) -> void:
 	var timer := get_tree().create_timer(1.0)
 	timer.timeout.connect(func():
 		if has_node("/root/SceneRouter"):
-			get_node("/root/SceneRouter").goto("res://src/screens/results.tscn", result)
+			if _mode == "endless" or _level_id == 0:
+				get_node("/root/SceneRouter").goto("res://src/screens/endless_results.tscn", result)
+			else:
+				get_node("/root/SceneRouter").goto("res://src/screens/results.tscn", result)
 	)

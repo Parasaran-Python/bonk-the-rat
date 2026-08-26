@@ -1,0 +1,128 @@
+[gd_scene format=3 uid="uid://endless_results_scene"]
+
+[ext_resource type="Script" path="res://src/screens/endless_results.gd" id="1_end"]
+
+[node name="EndlessResults" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_end")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.10, 0.14, 0.18, 1)
+
+[node name="VBox" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -320.0
+offset_top = -270.0
+offset_right = 320.0
+offset_bottom = 270.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 14
+alignment = 1
+
+[node name="Title" type="Label" parent="VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.2, 1)
+theme_override_font_sizes/font_size = 40
+text = "ENDLESS RUN OVER"
+horizontal_alignment = 1
+
+[node name="ScoreLabel" type="Label" parent="VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "FINAL SCORE: 0"
+horizontal_alignment = 1
+
+[node name="WaveLabel" type="Label" parent="VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_font_sizes/font_size = 18
+text = "WAVE REACHED: 1"
+horizontal_alignment = 1
+
+[node name="NameEntryBox" type="VBoxContainer" parent="VBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Prompt" type="Label" parent="VBox/NameEntryBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Enter Name for Leaderboard (max 8 chars):"
+horizontal_alignment = 1
+
+[node name="HBox" type="HBoxContainer" parent="VBox/NameEntryBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="NameInput" type="LineEdit" parent="VBox/NameEntryBox/HBox"]
+custom_minimum_size = Vector2(180, 40)
+layout_mode = 2
+text = "RAT"
+max_length = 8
+alignment = 1
+
+[node name="SubmitBtn" type="Button" parent="VBox/NameEntryBox/HBox"]
+custom_minimum_size = Vector2(120, 40)
+layout_mode = 2
+text = "SUBMIT"
+
+[node name="RankLabel" type="Label" parent="VBox"]
+visible = false
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "🏆 RANK #1 IN TOP 10! 🏆"
+horizontal_alignment = 1
+
+[node name="LeaderboardBox" type="VBoxContainer" parent="VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Header" type="Label" parent="VBox/LeaderboardBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.9, 0.4, 1)
+theme_override_font_sizes/font_size = 20
+text = "TOP 10 LEADERBOARD"
+horizontal_alignment = 1
+
+[node name="Scroll" type="ScrollContainer" parent="VBox/LeaderboardBox"]
+custom_minimum_size = Vector2(0, 160)
+layout_mode = 2
+
+[node name="List" type="VBoxContainer" parent="VBox/LeaderboardBox/Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
+
+[node name="BtnBox" type="HBoxContainer" parent="VBox"]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="PlayAgainBtn" type="Button" parent="VBox/BtnBox"]
+custom_minimum_size = Vector2(150, 46)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "PLAY AGAIN"
+
+[node name="MenuBtn" type="Button" parent="VBox/BtnBox"]
+custom_minimum_size = Vector2(150, 46)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "MAIN MENU"
