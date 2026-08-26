@@ -14,3 +14,8 @@ func test_buses_created() -> void:
 	am._make_buses()
 	ok(AudioServer.get_bus_index("Music") != -1, "Music bus exists")
 	ok(AudioServer.get_bus_index("SFX") != -1, "SFX bus exists")
+
+func test_music_tracks_load() -> void:
+	for t in ["menu", "zone1", "zone2", "zone3", "endless"]:
+		var s: AudioStream = load("res://assets/audio/music_%s.wav" % t)
+		ok(s != null and s.get_length() > 3.0, "music %s present >3s" % t)

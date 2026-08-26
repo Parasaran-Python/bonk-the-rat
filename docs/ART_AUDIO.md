@@ -41,3 +41,15 @@ The `Synth` class provides pure mathematical DSP building blocks:
 | `ui_back` | Lower 600 Hz square blip | Menu back / cancel |
 | `level_win` | 5-note rising C-major square melody | Level victory |
 | `level_fail` | 3-note descending minor saw tones | Level defeat |
+
+### Music Library
+
+All music tracks are seamless 4-bar loops synthesized with distinct instrumental voicings per zone mood:
+
+| Track Name | Tempo & Mood | Instrumentation |
+|---|---|---|
+| `music_menu` | 96 BPM gentle / cheerful | Triangle bass + soft triangle lead |
+| `music_zone1` | 112 BPM bouncy pantry theme | Walking triangle bass + bouncy square lead + hi-hats |
+| `music_zone2` | 88 BPM moody basement pad | Deep saw bass pad + melodic saw lead |
+| `music_zone3` | 126 BPM driving kitchen frenzy | Fast alternating saw bass 8ths + square arpeggios + hi-hats |
+| `music_endless` | 140 BPM hyper-speed arcade | Driving bass + dense 16th-note square leads + hi-hats |

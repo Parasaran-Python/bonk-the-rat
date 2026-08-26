@@ -3,9 +3,10 @@ extends SceneTree
 const Synth := preload("res://tools/synth.gd")
 
 func _initialize() -> void:
-	print("Generating SFX audio library...")
+	print("Generating SFX and Music audio library...")
 	DirAccess.make_dir_recursive_absolute("res://assets/audio")
 	_gen_sfx()
+	_gen_music()
 	print("Audio generation complete.")
 	quit(0)
 
@@ -113,3 +114,119 @@ func _gen_sfx() -> void:
 		Synth.mix_osc(b_fail, idx * 0.25, 0.45, fail_notes[idx], "saw", 0.4, 0.02, 0.25)
 	Synth.normalize(b_fail, 0.85)
 	Synth.save_wav(b_fail, "res://assets/audio/level_fail.wav")
+
+func _semi_to_freq(semi_from_a4: int) -> float:
+	return 440.0 * pow(2.0, float(semi_from_a4) / 12.0)
+
+func _render_track(
+	fname: String,
+	bpm: float,
+	bass_notes: Array,
+	lead_notes: Array,
+	bass_wave: String = "tri",
+	lead_wave: String = "square",
+	hats: bool = false
+) -> void:
+	var spb := 60.0 / bpm
+	var total_dur := 16.0 * spb
+	var buf := Synth.buffer(total_dur)
+
+	# Render bass notes
+	for n: Array in bass_notes:
+		var beat: float = float(n[0])
+		var freq: float = float(n[1])
+		var len_b: float = float(n[2])
+		var start_s := beat * spb
+		var dur_s := len_b * spb
+		Synth.mix_osc(buf, start_s, dur_s, freq, bass_wave, 0.42, 0.02, 0.05)
+
+	# Render lead notes
+	for n: Array in lead_notes:
+		var beat: float = float(n[0])
+		var freq: float = float(n[1])
+		var len_b: float = float(n[2])
+		var start_s := beat * spb
+		var dur_s := len_b * spb
+		Synth.mix_osc(buf, start_s, dur_s, freq, lead_wave, 0.32, 0.01, 0.04)
+
+	# Render rhythmic hats
+	if hats:
+		for b in range(16):
+			var t_hat := float(b) * spb
+			Synth.mix_osc(buf, t_hat, 0.035, 6000.0, "noise", 0.10, 0.001, 0.025)
+			var t_hat_off := (float(b) + 0.5) * spb
+			Synth.mix_osc(buf, t_hat_off, 0.025, 7500.0, "noise", 0.06, 0.001, 0.02)
+
+	Synth.normalize(buf, 0.85)
+	Synth.save_wav(buf, "res://assets/audio/%s.wav" % fname)
+
+func _gen_music() -> void:
+	# 1. music_menu: 96 BPM gentle tri. Bass A2 whole/half notes; tri lead C4-E4-G4 half notes; no hats
+	var menu_bass := [
+		[0.0, _semi_to_freq(-24), 3.8],
+		[4.0, _semi_to_freq(-21), 3.8],
+		[8.0, _semi_to_freq(-19), 3.8],
+		[12.0, _semi_to_freq(-17), 3.8],
+	]
+	var menu_lead := [
+		[0.0, _semi_to_freq(-9), 1.9],
+		[2.0, _semi_to_freq(-5), 1.9],
+		[4.0, _semi_to_freq(-2), 1.9],
+		[6.0, _semi_to_freq(0), 1.9],
+		[8.0, _semi_to_freq(-2), 1.9],
+		[10.0, _semi_to_freq(-5), 1.9],
+		[12.0, _semi_to_freq(-9), 3.8],
+	]
+	_render_track("music_menu", 96.0, menu_bass, menu_lead, "tri", "tri", false)
+
+	# 2. music_zone1: 112 BPM bouncy square lead + walking bass + hats
+	var z1_bass := []
+	var z1_bass_pattern := [-24, -24, -21, -17, -24, -24, -21, -17, -24, -24, -21, -17, -19, -17, -15, -17]
+	for b in range(16):
+		z1_bass.append([float(b), _semi_to_freq(z1_bass_pattern[b]), 0.85])
+
+	var z1_lead := []
+	var z1_lead_notes := [0, 4, 7, 4, 0, 4, 7, 12, 11, 7, 4, 2, 0, 4, 2, -1]
+	for idx in range(16):
+		z1_lead.append([float(idx), _semi_to_freq(z1_lead_notes[idx]), 0.45])
+	_render_track("music_zone1", 112.0, z1_bass, z1_lead, "tri", "square", true)
+
+	# 3. music_zone2: 88 BPM sparse saw pad minor (D-minor pads D2/F2/A2/C3; sparse saw D4-F4-A3)
+	var z2_bass := [
+		[0.0, _semi_to_freq(-31), 3.9],
+		[4.0, _semi_to_freq(-28), 3.9],
+		[8.0, _semi_to_freq(-24), 3.9],
+		[12.0, _semi_to_freq(-21), 3.9],
+	]
+	var z2_lead := [
+		[0.0, _semi_to_freq(-7), 3.5],
+		[4.0, _semi_to_freq(-4), 3.5],
+		[8.0, _semi_to_freq(-12), 3.5],
+		[12.0, _semi_to_freq(-7), 3.5],
+	]
+	_render_track("music_zone2", 88.0, z2_bass, z2_lead, "saw", "saw", false)
+
+	# 4. music_zone3: 126 BPM driving bass 8ths + arp (E-minor alternating E2/B2; square arp)
+	var z3_bass := []
+	for b in range(32):
+		var semi := -29 if (b % 2 == 0) else -22
+		z3_bass.append([float(b) * 0.5, _semi_to_freq(semi), 0.42])
+
+	var z3_lead := []
+	var z3_lead_pattern := [7, 5, 2, 5, 7, 9, 10, 9, 7, 5, 2, 0, 2, 5, 7, 10]
+	for idx in range(16):
+		z3_lead.append([float(idx), _semi_to_freq(z3_lead_pattern[idx]), 0.85])
+	_render_track("music_zone3", 126.0, z3_bass, z3_lead, "saw", "square", true)
+
+	# 5. music_endless: 140 BPM faster variant with dense sixteenth-note figures
+	var end_bass := []
+	for b in range(32):
+		var semi := -24 if (b % 2 == 0) else -17
+		end_bass.append([float(b) * 0.5, _semi_to_freq(semi), 0.40])
+
+	var end_lead := []
+	var end_lead_pattern := [0, 3, 5, 7, 10, 12, 10, 7, 5, 7, 10, 12, 15, 12, 10, 7]
+	for idx in range(32):
+		var note_idx := idx % end_lead_pattern.size()
+		end_lead.append([float(idx) * 0.5, _semi_to_freq(end_lead_pattern[note_idx]), 0.38])
+	_render_track("music_endless", 140.0, end_bass, end_lead, "tri", "square", true)
