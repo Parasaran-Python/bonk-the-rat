@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://rat_actor_scene"]
+
+[ext_resource type="Script" path="res://src/game/rat.gd" id="1_rat"]
+[ext_resource type="Script" path="res://src/game/rat_visual.gd" id="2_vis"]
+
+[node name="Rat" type="Node2D"]
+script = ExtResource("1_rat")
+
+[node name="Visual" type="Node2D" parent="."]
+script = ExtResource("2_vis")
