@@ -1,0 +1,33 @@
+config_version=5
+
+[application]
+
+config/name="BONK THE RAT!"
+config/description="Arcade rat-whacking parlour action"
+run/main_scene="res://src/screens/splash.tscn"
+config/features=PackedStringArray("4.6")
+config/icon="res://icon.svg"
+
+[autoload]
+
+Settings="*res://src/autoload/settings.gd"
+SaveManager="*res://src/autoload/save_manager.gd"
+AudioManager="*res://src/autoload/audio_manager.gd"
+Game="*res://src/autoload/game.gd"
+SceneRouter="*res://src/autoload/scene_router.gd"
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+window/handheld/orientation=4
+
+[input_devices]
+
+pointing/emulate_touch_from_mouse=true
+
+[rendering]
+
+renderer/rendering_method.mobile="mobile"
