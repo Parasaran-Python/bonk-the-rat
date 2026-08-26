@@ -6,7 +6,7 @@ config/name="BONK THE RAT!"
 config/description="Arcade rat-whacking parlour action"
 run/main_scene="res://src/screens/splash.tscn"
 config/features=PackedStringArray("4.6")
-config/icon="res://icon.svg"
+config/icon="res://icons/icon_main_192.png"
 
 [autoload]
 
@@ -30,4 +30,5 @@ pointing/emulate_touch_from_mouse=true
 
 [rendering]
 
+textures/vram_compression/import_etc2_astc=true
 renderer/rendering_method.mobile="mobile"
