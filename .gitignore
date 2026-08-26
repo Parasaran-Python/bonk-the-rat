@@ -1,0 +1,16 @@
+# Godot 4
+.godot/
+*.translation
+
+# Exports & build artifacts
+export/
+build/
+*.tmp
+
+# Android keystore material — never commit secrets
+*.keystore
+keystore.properties
+
+# OS noise
+.DS_Store
+Thumbs.db
