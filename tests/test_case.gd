@@ -4,6 +4,8 @@ extends RefCounted
 
 var errors: Array[String] = []
 var checks := 0
+var root: Window = null
+var tree: SceneTree = null
 
 func ok(cond: bool, msg: String) -> void:
 	checks += 1

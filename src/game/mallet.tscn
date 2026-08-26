@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://mallet_actor_scene"]
+
+[ext_resource type="Script" path="res://src/game/mallet.gd" id="1_mallet"]
+
+[node name="Mallet" type="Node2D"]
+z_index = 100
+script = ExtResource("1_mallet")

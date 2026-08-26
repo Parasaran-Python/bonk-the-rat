@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://hole_container_scene"]
+
+[ext_resource type="Script" path="res://src/game/hole.gd" id="1_hole"]
+[ext_resource type="Script" path="res://src/game/hole_bg.gd" id="2_bg"]
+[ext_resource type="PackedScene" path="res://src/game/rat.tscn" id="3_rat"]
+[ext_resource type="Script" path="res://src/game/hole_rim.gd" id="4_rim"]
+
+[node name="Hole" type="Node2D"]
+script = ExtResource("1_hole")
+
+[node name="HoleBg" type="Node2D" parent="."]
+z_index = 0
+script = ExtResource("2_bg")
+
+[node name="Rat" parent="." instance=ExtResource("3_rat")]
+z_index = 1
+
+[node name="RimFront" type="Node2D" parent="."]
+z_index = 2
+script = ExtResource("4_rim")

@@ -2,10 +2,24 @@ extends SceneTree
 ## godot --headless --path . --script tests/run.gd   Exit 0 = green.
 
 func _initialize() -> void:
+	var autoloads := {
+		"Settings": "res://src/autoload/settings.gd",
+		"SaveManager": "res://src/autoload/save_manager.gd",
+		"AudioManager": "res://src/autoload/audio_manager.gd",
+		"Game": "res://src/autoload/game.gd",
+	}
+	for k in autoloads:
+		if not root.has_node(k):
+			var n: Node = load(autoloads[k]).new()
+			n.name = k
+			root.add_child(n)
+
 	var failures := 0
 	var total_checks := 0
 	for path in _discover("res://tests"):
 		var mod: Object = load(path).new()
+		mod.set("root", root)
+		mod.set("tree", self)
 		for m in mod.get_method_list():
 			if not m.name.begins_with("test_"):
 				continue
