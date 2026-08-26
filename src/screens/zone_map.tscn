@@ -1,0 +1,88 @@
+[gd_scene format=3 uid="uid://zone_map_scene"]
+
+[ext_resource type="Script" path="res://src/screens/zone_map.gd" id="1_map"]
+
+[node name="ZoneMap" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_map")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.12, 0.16, 0.22, 1)
+
+[node name="Header" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 32.0
+offset_top = 24.0
+offset_right = -32.0
+offset_bottom = 74.0
+grow_horizontal = 2
+
+[node name="BackBtn" type="Button" parent="Header"]
+custom_minimum_size = Vector2(100, 44)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "← BACK"
+
+[node name="Title" type="Label" parent="Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 0.85, 0.2, 1)
+theme_override_font_sizes/font_size = 36
+text = "SELECT ZONE"
+horizontal_alignment = 1
+
+[node name="TotalStarsLabel" type="Label" parent="Header"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.9, 0.3, 1)
+theme_override_font_sizes/font_size = 26
+text = "⭐ 0 / 45"
+
+[node name="CardsContainer" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -540.0
+offset_top = -140.0
+offset_right = 540.0
+offset_bottom = 180.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 32
+alignment = 1
+
+[node name="Zone1Card" type="Button" parent="CardsContainer"]
+custom_minimum_size = Vector2(320, 280)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "ZONE 1: PANTRY
+⭐ 0/15"
+
+[node name="Zone2Card" type="Button" parent="CardsContainer"]
+custom_minimum_size = Vector2(320, 280)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "ZONE 2: BASEMENT
+🔒 (Clear Level 5)"
+
+[node name="Zone3Card" type="Button" parent="CardsContainer"]
+custom_minimum_size = Vector2(320, 280)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "ZONE 3: KITCHEN
+🔒 (Clear Level 10)"

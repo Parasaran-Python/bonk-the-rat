@@ -1,13 +1,17 @@
 extends Control
-## Boot screen. Tap-to-start unlocks web audio context.
+## Boot screen. Tap-to-start unlocks web audio context and routes to Main Menu.
 
 func _ready() -> void:
-	var title := Label.new()
-	title.text = "BONK THE RAT!"
-	title.set_anchors_preset(Control.PRESET_CENTER)
-	add_child(title)
+	if has_node("/root/AudioManager"):
+		var am: Node = get_node("/root/AudioManager")
+		am.play_music("menu")
 
 func _input(event: InputEvent) -> void:
-	if event is InputEventMouseButton and event.pressed:
+	if (event is InputEventMouseButton and event.pressed) or (event is InputEventScreenTouch and event.pressed):
 		set_process_input(false)
-		print("[splash] start tapped")  # SceneRouter.goto wired in Task 13
+		if has_node("/root/AudioManager"):
+			get_node("/root/AudioManager").play_sfx("ui_click")
+		if has_node("/root/SceneRouter"):
+			get_node("/root/SceneRouter").goto("res://src/screens/main_menu.tscn")
+		else:
+			get_tree().change_scene_to_file("res://src/screens/main_menu.tscn")

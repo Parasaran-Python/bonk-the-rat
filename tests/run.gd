@@ -7,6 +7,7 @@ func _initialize() -> void:
 		"SaveManager": "res://src/autoload/save_manager.gd",
 		"AudioManager": "res://src/autoload/audio_manager.gd",
 		"Game": "res://src/autoload/game.gd",
+		"SceneRouter": "res://src/autoload/scene_router.gd",
 	}
 	for k in autoloads:
 		if not root.has_node(k):
