@@ -1,6 +1,6 @@
 class_name Board
 extends Node2D
-## Main interactive game board coordinating hole grid, spawn timing, mallet and hit tests.
+## Main interactive game board coordinating hole grid, spawn timing, mallet, juice FX and hit tests.
 
 signal rat_bonked(id: String, points: int, pos: Vector2)
 signal rat_escaped(id: String)
@@ -88,7 +88,10 @@ func _process(delta: float) -> void:
 		var now_ms := Time.get_ticks_msec()
 		var res := _director.tick(delta, _active_rats_count(), progress, now_ms)
 		if res.has("hole") and res["hole"] >= 0 and res["hole"] < _holes.size():
-			_holes[res["hole"]].spawn_rat(res["rat"])
+			var h := _holes[res["hole"]]
+			h.spawn_rat(res["rat"])
+			if _fx != null:
+				_fx.dirt_puff(h.position)
 
 	if Game != null and Game.active():
 		Game.tick(delta)
@@ -122,7 +125,7 @@ func swing_at(pos: Vector2) -> void:
 				var pts := 0
 				if Game != null and Game.active():
 					pts = Game.on_rat_bonked(id)
-				if has_node("/root/AudioManager"):
+				if is_inside_tree() and has_node("/root/AudioManager"):
 					var am: Node = get_node("/root/AudioManager")
 					if id == "tank":
 						am.play_sfx("bonk_heavy")
@@ -131,16 +134,18 @@ func swing_at(pos: Vector2) -> void:
 				if _fx != null:
 					_fx.impact(target_hole.rat_head_global_pos(), id == "tank" or id == "golden")
 					_fx.shake(2.0 if id != "tank" else 5.0)
+					if id == "tank":
+						_fx.hit_stop(0.06)
 				rat_bonked.emit(id, pts, target_hole.rat_head_global_pos())
 			"staggered":
-				if has_node("/root/AudioManager"):
+				if is_inside_tree() and has_node("/root/AudioManager"):
 					get_node("/root/AudioManager").play_sfx("bonk_heavy")
 				if _fx != null:
 					_fx.impact(target_hole.rat_head_global_pos(), false)
 					_fx.shake(3.0)
 			"forbidden":
 				var id := target_hole.rat_id()
-				if has_node("/root/AudioManager"):
+				if is_inside_tree() and has_node("/root/AudioManager"):
 					var am: Node = get_node("/root/AudioManager")
 					if id == "boom":
 						am.play_sfx("boom")
@@ -151,12 +156,14 @@ func swing_at(pos: Vector2) -> void:
 				if _fx != null:
 					_fx.impact(target_hole.rat_head_global_pos(), true)
 					_fx.shake(6.0 if id != "boom" else 10.0)
+					if id == "boom":
+						_fx.hit_stop(0.08)
 				forbidden_hit.emit(id)
 			_:
 				_trigger_whiff()
 
 func _trigger_whiff() -> void:
-	if has_node("/root/AudioManager"):
+	if is_inside_tree() and has_node("/root/AudioManager"):
 		get_node("/root/AudioManager").play_sfx("whiff")
 	if Game != null and Game.active():
 		Game.on_whiff()

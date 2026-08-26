@@ -1,6 +1,6 @@
 class_name Results
 extends Control
-## Results screen celebrating level completion with star reveals and next-level routing.
+## Results screen celebrating level completion with star reveals, confetti and next-level routing.
 
 @onready var _title_lbl: Label = $VBox/Title
 @onready var _stars_lbl: Label = $VBox/StarsLabel
@@ -74,6 +74,14 @@ func _ready() -> void:
 
 	if stars > 0 and has_node("/root/AudioManager"):
 		get_node("/root/AudioManager").play_sfx("star_fanfare")
+
+	if stars == 3:
+		_spawn_confetti()
+
+func _spawn_confetti() -> void:
+	var fx := FxLayer.new()
+	add_child(fx)
+	fx.confetti(Vector2(640, 260))
 
 func _on_retry() -> void:
 	if has_node("/root/AudioManager"):
