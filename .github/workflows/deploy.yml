@@ -48,8 +48,9 @@ jobs:
 
       - name: Configure Custom Domain & COOP/COEP Isolation
         run: |
-          # Set custom domain for GitHub Pages
+          # Set custom domain and disable Jekyll for GitHub Pages
           echo "bonk-the-rat.parasaran.in" > export/web/CNAME
+          touch export/web/.nojekyll
 
           # Download and inject coi-serviceworker for cross-origin isolation headers on GitHub Pages
           curl -sSL -o export/web/coi-serviceworker.min.js https://raw.githubusercontent.com/gzuidhof/coi-serviceworker/master/coi-serviceworker.min.js
