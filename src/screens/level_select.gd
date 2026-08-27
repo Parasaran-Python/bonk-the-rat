@@ -68,16 +68,20 @@ func _build_tiles() -> void:
 		var unlocked := Progression.is_unlocked(i, stars_map)
 		var stars := int(stars_map.get(i, 0))
 
-		var star_str := ""
-		for s in range(3):
-			star_str += "⭐" if s < stars else "☆"
-
 		if unlocked:
-			btn.text = "LEVEL %d\n\n%s" % [i, star_str]
+			btn.text = "LEVEL %d\n" % i
+			var star_bar := StarRating.new(stars, 12.0, 6.0)
+			star_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			star_bar.anchor_right = 1.0
+			star_bar.anchor_top = 1.0
+			star_bar.anchor_bottom = 1.0
+			star_bar.offset_top = -54.0
+			star_bar.offset_bottom = -18.0
+			btn.add_child(star_bar)
 			var lvl_id := i
 			btn.pressed.connect(func(): _start_level(lvl_id))
 		else:
-			btn.text = "LEVEL %d\n\n🔒" % i
+			btn.text = "LEVEL %d\n\nLOCKED" % i
 			btn.disabled = true
 
 		_grid.add_child(btn)

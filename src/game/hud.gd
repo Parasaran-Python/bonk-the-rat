@@ -6,6 +6,7 @@ signal pause_requested()
 
 @onready var _score_label: Label = $Root/TopBar/ScoreLabel if has_node("Root/TopBar/ScoreLabel") else null
 @onready var _time_label: Label = $Root/TopBar/TimeLabel if has_node("Root/TopBar/TimeLabel") else null
+@onready var _lives_display: LivesDisplay = $Root/TopBar/LivesDisplay if has_node("Root/TopBar/LivesDisplay") else null
 @onready var _lives_label: Label = $Root/TopBar/LivesLabel if has_node("Root/TopBar/LivesLabel") else null
 @onready var _combo_label: Label = $Root/BottomBar/ComboLabel if has_node("Root/BottomBar/ComboLabel") else null
 @onready var _combo_bar: ProgressBar = $Root/BottomBar/ComboBar if has_node("Root/BottomBar/ComboBar") else null
@@ -102,10 +103,12 @@ func _on_combo_milestone(mult: int) -> void:
 		tw.chain().tween_callback(l.queue_free)
 
 func set_lives(lives_count: int) -> void:
-	if _lives_label != null:
+	if _lives_display != null:
+		_lives_display.lives = lives_count
+	elif _lives_label != null:
 		var hearts := ""
 		for i in range(3):
-			hearts += "❤️ " if i < lives_count else "🖤 "
+			hearts += "O " if i < lives_count else "X "
 		_lives_label.text = hearts.strip_edges()
 
 func set_time_left(sec: float) -> void:
@@ -121,7 +124,7 @@ func set_wave(wave: int) -> void:
 
 func show_powerup(kind: String, dur: float) -> void:
 	if _powerup_label != null:
-		var text := "⚡ FREEZE!" if kind == "freeze" else "⭐ 2X POINTS!"
+		var text := "FREEZE!" if kind == "freeze" else "2X POINTS!"
 		_powerup_label.text = text
 		_powerup_label.visible = true
 

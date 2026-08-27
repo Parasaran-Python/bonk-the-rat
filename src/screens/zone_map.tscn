@@ -2,6 +2,8 @@
 
 [ext_resource type="Script" path="res://src/screens/zone_map.gd" id="1_map"]
 
+[ext_resource type="Script" path="res://src/art/star_icon.gd" id="2_star_icon"]
+
 [node name="ZoneMap" type="Control"]
 layout_mode = 3
 anchors_preset = 15
@@ -34,7 +36,7 @@ grow_horizontal = 2
 custom_minimum_size = Vector2(100, 44)
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
-text = "← BACK"
+text = "< BACK"
 
 [node name="Title" type="Label" parent="Header"]
 layout_mode = 2
@@ -44,11 +46,23 @@ theme_override_font_sizes/font_size = 36
 text = "SELECT ZONE"
 horizontal_alignment = 1
 
-[node name="TotalStarsLabel" type="Label" parent="Header"]
+[node name="TotalStarsBox" type="HBoxContainer" parent="Header"]
+layout_mode = 2
+theme_override_constants/separation = 8
+alignment = 2
+
+[node name="StarIcon" type="Control" parent="Header/TotalStarsBox"]
+custom_minimum_size = Vector2(28, 28)
+layout_mode = 2
+size_flags_vertical = 4
+script = ExtResource("2_star_icon")
+radius = 13.0
+
+[node name="TotalStarsLabel" type="Label" parent="Header/TotalStarsBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.9, 0.3, 1)
 theme_override_font_sizes/font_size = 26
-text = "⭐ 0 / 45"
+text = "0 / 45"
 
 [node name="CardsContainer" type="HBoxContainer" parent="."]
 layout_mode = 1
@@ -71,18 +85,23 @@ custom_minimum_size = Vector2(320, 280)
 layout_mode = 2
 theme_override_font_sizes/font_size = 22
 text = "ZONE 1: PANTRY
-⭐ 0/15"
+
+STARS: 0 / 15"
 
 [node name="Zone2Card" type="Button" parent="CardsContainer"]
 custom_minimum_size = Vector2(320, 280)
 layout_mode = 2
 theme_override_font_sizes/font_size = 22
 text = "ZONE 2: BASEMENT
-🔒 (Clear Level 5)"
+
+LOCKED
+(Clear Level 5)"
 
 [node name="Zone3Card" type="Button" parent="CardsContainer"]
 custom_minimum_size = Vector2(320, 280)
 layout_mode = 2
 theme_override_font_sizes/font_size = 22
 text = "ZONE 3: KITCHEN
-🔒 (Clear Level 10)"
+
+LOCKED
+(Clear Level 10)"

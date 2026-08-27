@@ -3,7 +3,7 @@ extends Control
 ## Results screen celebrating level completion with star reveals, confetti and next-level routing.
 
 @onready var _title_lbl: Label = $VBox/Title
-@onready var _stars_lbl: Label = $VBox/StarsLabel
+@onready var _star_rating: StarRating = $VBox/StarRating if has_node("VBox/StarRating") else null
 @onready var _score_lbl: Label = $VBox/ScoreLabel
 @onready var _best_lbl: Label = $VBox/BestLabel
 @onready var _combo_lbl: Label = $VBox/ComboLabel
@@ -42,11 +42,8 @@ func _ready() -> void:
 			_title_lbl.text = "LEVEL FAILED"
 			_title_lbl.add_theme_color_override("font_color", Color("ef4444"))
 
-	if _stars_lbl != null:
-		var s_text := ""
-		for s in range(3):
-			s_text += "⭐ " if s < stars else "☆ "
-		_stars_lbl.text = s_text.strip_edges()
+	if _star_rating != null:
+		_star_rating.stars = stars
 
 	if _score_lbl != null:
 		_score_lbl.text = "SCORE: %d" % score
@@ -60,7 +57,7 @@ func _ready() -> void:
 
 	if _best_lbl != null:
 		if score >= prev_best and score > 0:
-			_best_lbl.text = "🎉 NEW BEST SCORE! 🎉"
+			_best_lbl.text = "NEW BEST SCORE!"
 			_best_lbl.visible = true
 		elif prev_best > 0:
 			_best_lbl.text = "BEST: %d" % prev_best

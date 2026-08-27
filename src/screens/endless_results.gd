@@ -59,7 +59,7 @@ func _on_submit() -> void:
 
 	if _rank_lbl != null:
 		if rank > 0:
-			_rank_lbl.text = "🏆 RANK #%d IN TOP 10! 🏆" % rank
+			_rank_lbl.text = "RANK #%d IN TOP 10!" % rank
 			_rank_lbl.add_theme_color_override("font_color", Color("ffd166"))
 		else:
 			_rank_lbl.text = "Score recorded!"

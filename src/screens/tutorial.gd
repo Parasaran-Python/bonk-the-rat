@@ -61,7 +61,7 @@ func _start_phase_2() -> void:
 	_phase = 2
 	_p2_success = false
 	if _instruction_lbl != null:
-		_instruction_lbl.text = "PHASE 2: WHISKERS THE CAT — DON'T BONK!"
+		_instruction_lbl.text = "PHASE 2: WHISKERS THE CAT - DON'T BONK!"
 	if _hint_lbl != null:
 		_hint_lbl.text = "Let the cat sink safely! Hitting cats costs a life!"
 
