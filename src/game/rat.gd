@@ -25,6 +25,8 @@ var _tween: Tween = null
 @onready var _visual: Node2D = $Visual if has_node("Visual") else null
 
 func _ready() -> void:
+	visible = false
+	position.y = DOWN_OFFSET
 	if _visual == null and has_node("Visual"):
 		_visual = $Visual
 

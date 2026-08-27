@@ -16,6 +16,10 @@ func test_gone_is_terminal() -> void:
 func test_rat_scene_instantiates_and_strikes_synchronously() -> void:
 	var r: Rat = load("res://src/game/rat.tscn").instantiate()
 	r.rat_id = "tank"          # set before _draw paths run headless
+	if root != null:
+		root.add_child(r)
 	# synchronous FSM checks without awaiting tweens:
 	eq(int(r.state), int(Rat.State.GONE), "starts GONE")
-	r.free()
+	ok(not r.visible, "rat starts hidden")
+	eq(r.position.y, Rat.DOWN_OFFSET, "rat starts at down offset")
+	r.queue_free()
