@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://hud_canvas_scene"]
 
 [ext_resource type="Script" path="res://src/game/hud.gd" id="1_hud"]
+[ext_resource type="Script" path="res://src/art/lives_display.gd" id="2_lives"]
 
 [node name="HUD" type="CanvasLayer"]
 layer = 10
@@ -42,17 +43,20 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 28
 text = "SCORE: 0"
 
-[node name="LivesLabel" type="Label" parent="Root/TopBar"]
+[node name="LivesDisplay" type="Control" parent="Root/TopBar"]
+custom_minimum_size = Vector2(90, 28)
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
-text = "❤️ ❤️ ❤️"
+size_flags_vertical = 4
+script = ExtResource("2_lives")
+heart_size = 14.0
+spacing = 6.0
 
 [node name="PowerupLabel" type="Label" parent="Root/TopBar"]
 visible = false
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.85, 0.2, 1)
 theme_override_font_sizes/font_size = 24
-text = "⭐ 2X POINTS"
+text = "2X POINTS!"
 
 [node name="Spacer" type="Control" parent="Root/TopBar"]
 layout_mode = 2

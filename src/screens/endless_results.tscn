@@ -87,7 +87,7 @@ text = "SUBMIT"
 visible = false
 layout_mode = 2
 theme_override_font_sizes/font_size = 22
-text = "🏆 RANK #1 IN TOP 10! 🏆"
+text = "RANK #1 IN TOP 10!"
 horizontal_alignment = 1
 
 [node name="LeaderboardBox" type="VBoxContainer" parent="VBox"]

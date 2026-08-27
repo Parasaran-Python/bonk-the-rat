@@ -3,7 +3,7 @@ extends Control
 ## Zone selection screen showing the 3 themed chapters and aggregated star counts.
 
 @onready var _back_btn: Button = $Header/BackBtn
-@onready var _total_stars_lbl: Label = $Header/TotalStarsLabel
+@onready var _total_stars_lbl: Label = $Header/TotalStarsBox/TotalStarsLabel if has_node("Header/TotalStarsBox/TotalStarsLabel") else ($Header/TotalStarsLabel if has_node("Header/TotalStarsLabel") else null)
 @onready var _zone1_btn: Button = $CardsContainer/Zone1Card
 @onready var _zone2_btn: Button = $CardsContainer/Zone2Card
 @onready var _zone3_btn: Button = $CardsContainer/Zone3Card
@@ -27,12 +27,12 @@ func _update_zones() -> void:
 
 	var total := Progression.total_stars(stars_map)
 	if _total_stars_lbl != null:
-		_total_stars_lbl.text = "⭐ %d / 45" % total
+		_total_stars_lbl.text = "%d / 45" % total
 
 	# Zone 1 always unlocked
 	var z1_stars := _count_zone_stars(1, stars_map)
 	if _zone1_btn != null:
-		_zone1_btn.text = "ZONE 1: PANTRY\n⭐ %d/15" % z1_stars
+		_zone1_btn.text = "ZONE 1: PANTRY\n\nSTARS: %d / 15" % z1_stars
 
 	# Zone 2 requires level 5 >= 1 star
 	var z2_unlocked: bool = Progression.is_unlocked(6, stars_map)
@@ -40,9 +40,9 @@ func _update_zones() -> void:
 	if _zone2_btn != null:
 		_zone2_btn.disabled = not z2_unlocked
 		if z2_unlocked:
-			_zone2_btn.text = "ZONE 2: BASEMENT\n⭐ %d/15" % z2_stars
+			_zone2_btn.text = "ZONE 2: BASEMENT\n\nSTARS: %d / 15" % z2_stars
 		else:
-			_zone2_btn.text = "ZONE 2: BASEMENT\n🔒 (Clear Level 5)"
+			_zone2_btn.text = "ZONE 2: BASEMENT\n\nLOCKED\n(Clear Level 5)"
 
 	# Zone 3 requires level 10 >= 1 star
 	var z3_unlocked: bool = Progression.is_unlocked(11, stars_map)
@@ -50,9 +50,9 @@ func _update_zones() -> void:
 	if _zone3_btn != null:
 		_zone3_btn.disabled = not z3_unlocked
 		if z3_unlocked:
-			_zone3_btn.text = "ZONE 3: KITCHEN\n⭐ %d/15" % z3_stars
+			_zone3_btn.text = "ZONE 3: KITCHEN\n\nSTARS: %d / 15" % z3_stars
 		else:
-			_zone3_btn.text = "ZONE 3: KITCHEN\n🔒 (Clear Level 10)"
+			_zone3_btn.text = "ZONE 3: KITCHEN\n\nLOCKED\n(Clear Level 10)"
 
 func _count_zone_stars(zone: int, stars_map: Dictionary) -> int:
 	var c := 0

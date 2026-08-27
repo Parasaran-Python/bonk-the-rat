@@ -2,6 +2,8 @@
 
 [ext_resource type="Script" path="res://src/screens/results.gd" id="1_res"]
 
+[ext_resource type="Script" path="res://src/art/star_rating.gd" id="2_stars"]
+
 [node name="Results" type="Control"]
 layout_mode = 3
 anchors_preset = 15
@@ -43,11 +45,12 @@ theme_override_font_sizes/font_size = 48
 text = "LEVEL COMPLETE!"
 horizontal_alignment = 1
 
-[node name="StarsLabel" type="Label" parent="VBox"]
+[node name="StarRating" type="Control" parent="VBox"]
+custom_minimum_size = Vector2(240, 64)
 layout_mode = 2
-theme_override_font_sizes/font_size = 44
-text = "⭐ ⭐ ⭐"
-horizontal_alignment = 1
+script = ExtResource("2_stars")
+star_size = 28.0
+spacing = 16.0
 
 [node name="ScoreLabel" type="Label" parent="VBox"]
 layout_mode = 2
@@ -59,7 +62,7 @@ horizontal_alignment = 1
 layout_mode = 2
 theme_override_colors/font_color = Color(0.3, 0.9, 0.4, 1)
 theme_override_font_sizes/font_size = 20
-text = "🎉 NEW BEST SCORE! 🎉"
+text = "NEW BEST SCORE!"
 horizontal_alignment = 1
 
 [node name="ComboLabel" type="Label" parent="VBox"]

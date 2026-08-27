@@ -17,7 +17,7 @@ func load_or_init() -> void:
 		return
 	var loaded := SaveStore.deserialize(FileAccess.get_file_as_string(SAVE_PATH))
 	if loaded.is_empty():
-		push_warning("SaveManager: corrupt save at %s — backing up and resetting." % SAVE_PATH)
+		push_warning("SaveManager: corrupt save at %s - backing up and resetting." % SAVE_PATH)
 		DirAccess.remove_absolute(ProjectSettings.globalize_path(SAVE_PATH + ".bak"))
 		var err := DirAccess.rename_absolute(
 			ProjectSettings.globalize_path(SAVE_PATH),
