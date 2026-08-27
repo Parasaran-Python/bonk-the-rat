@@ -1,0 +1,173 @@
+name: CI & Multi-Platform Deployment
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Run Unit & FSM Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Godot Engine
+        uses: ./.github/actions/setup-godot
+        with:
+          version: "4.6.1-stable"
+          templates: "false"
+
+      - name: Execute automated test suite
+        run: make test
+
+  build-web:
+    name: Export Web (HTML5/Wasm)
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Godot & Export Templates
+        uses: ./.github/actions/setup-godot
+        with:
+          version: "4.6.1-stable"
+          templates: "true"
+
+      - name: Export Web Build
+        run: make export-web
+
+      - name: Configure Custom Domain & COOP/COEP Isolation
+        run: |
+          # Set custom domain for GitHub Pages
+          echo "bonk-the-rat.parasaran.in" > export/web/CNAME
+
+          # Download and inject coi-serviceworker for cross-origin isolation headers on GitHub Pages
+          curl -sSL -o export/web/coi-serviceworker.min.js https://raw.githubusercontent.com/gzuidhof/coi-serviceworker/master/coi-serviceworker.min.js
+          sed -i 's|<head>|<head>\n\t<script src="coi-serviceworker.min.js"></script>|g' export/web/index.html
+
+      - name: Upload GitHub Pages Artifact
+        if: github.ref == 'refs/heads/main'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: export/web
+
+      - name: Package Web zip
+        run: |
+          cd export/web
+          zip -r ../../bonk-the-rat-web.zip ./*
+
+      - name: Upload Web Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: bonk-the-rat-web
+          path: bonk-the-rat-web.zip
+
+  deploy-pages:
+    name: Deploy to GitHub Pages
+    needs: build-web
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: https://bonk-the-rat.parasaran.in/
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  build-linux:
+    name: Export Linux (x86_64)
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Godot & Export Templates
+        uses: ./.github/actions/setup-godot
+        with:
+          version: "4.6.1-stable"
+          templates: "true"
+
+      - name: Export Linux Build
+        run: make export-linux
+
+      - name: Package Linux Archive
+        run: |
+          chmod +x export/linux/bonk-the-rat.x86_64
+          tar -czf bonk-the-rat-linux-x86_64.tar.gz -C export/linux .
+
+      - name: Upload Linux Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: bonk-the-rat-linux
+          path: bonk-the-rat-linux-x86_64.tar.gz
+
+  build-windows:
+    name: Export Windows (x86_64)
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Godot & Export Templates
+        uses: ./.github/actions/setup-godot
+        with:
+          version: "4.6.1-stable"
+          templates: "true"
+
+      - name: Export Windows Build
+        run: make export-windows
+
+      - name: Package Windows Archive
+        run: |
+          cd export/windows
+          zip -r ../../bonk-the-rat-windows-x86_64.zip ./*
+
+      - name: Upload Windows Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: bonk-the-rat-windows
+          path: bonk-the-rat-windows-x86_64.zip
+
+  release:
+    name: Publish GitHub Release
+    needs: [build-web, build-linux, build-windows]
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download all workflow artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release-assets
+          merge-multiple: true
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            release-assets/bonk-the-rat-linux-x86_64.tar.gz
+            release-assets/bonk-the-rat-windows-x86_64.zip
+            release-assets/bonk-the-rat-web.zip
+          draft: false
+          prerelease: false
+          generate_release_notes: true

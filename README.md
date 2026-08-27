@@ -63,9 +63,17 @@ make levels
 
 # 5. Build export packages
 make export-linux    # Builds Linux standalone x86_64
+make export-windows  # Builds Windows standalone x86_64 (.exe)
 make export-web      # Builds WebAssembly / HTML5 export
 make export-android  # Builds signed Android APK
 ```
+
+---
+
+## 🌐 Play Online
+
+Play the latest version instantly in your browser (HTML5 / WebAssembly):
+👉 **[https://bonk-the-rat.parasaran.in/](https://bonk-the-rat.parasaran.in/)**
 
 ---
 
