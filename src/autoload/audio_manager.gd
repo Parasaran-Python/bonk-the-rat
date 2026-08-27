@@ -13,6 +13,7 @@ var _music_b: AudioStreamPlayer
 var _music_current: AudioStreamPlayer = null
 var _current_track_name := ""
 var _music_tween: Tween = null
+var _web_audio_unlocked := false
 
 func _ready() -> void:
 	_make_buses()
@@ -20,6 +21,14 @@ func _ready() -> void:
 	_init_music_players()
 	_wire_settings()
 	_apply_volumes()
+
+func _unhandled_input(event: InputEvent) -> void:
+	if not _web_audio_unlocked and (event is InputEventMouseButton or event is InputEventScreenTouch or event is InputEventKey):
+		if event.is_pressed():
+			_web_audio_unlocked = true
+			_apply_volumes()
+			if _music_current != null and not _music_current.playing and _current_track_name != "":
+				_music_current.play()
 
 func _make_buses() -> void:
 	if AudioServer.get_bus_index("Music") == -1:
@@ -107,8 +116,8 @@ func _get_sfx_stream(name: String) -> AudioStream:
 		return s
 	return null
 
-func play_music(track: String) -> void:
-	if track == _current_track_name and _music_current != null and _music_current.playing:
+func play_music(track: String, force_restart: bool = false) -> void:
+	if not force_restart and track == _current_track_name and _music_current != null and _music_current.playing:
 		return
 
 	_current_track_name = track
@@ -120,7 +129,7 @@ func play_music(track: String) -> void:
 	if stream is AudioStreamWAV:
 		stream.loop_mode = AudioStreamWAV.LOOP_FORWARD
 		stream.loop_begin = 0
-		stream.loop_end = stream.data.size() / 2
+		stream.loop_end = 0
 
 	if _music_a == null or _music_b == null:
 		_init_music_players()
@@ -131,17 +140,22 @@ func play_music(track: String) -> void:
 	if _music_tween != null and _music_tween.is_valid():
 		_music_tween.kill()
 
-	target_player.stream = stream
-	target_player.volume_db = -80.0
-	target_player.play()
-	_music_current = target_player
-
-	_music_tween = create_tween()
-	_music_tween.set_parallel(true)
-	_music_tween.tween_property(target_player, "volume_db", 0.0, 0.8)
 	if outgoing_player != null and outgoing_player.playing:
+		target_player.stream = stream
+		target_player.volume_db = -80.0
+		target_player.play()
+		_music_current = target_player
+
+		_music_tween = create_tween()
+		_music_tween.set_parallel(true)
+		_music_tween.tween_property(target_player, "volume_db", 0.0, 0.8)
 		_music_tween.tween_property(outgoing_player, "volume_db", -80.0, 0.8)
 		_music_tween.chain().tween_callback(outgoing_player.stop)
+	else:
+		target_player.stream = stream
+		target_player.volume_db = 0.0
+		target_player.play()
+		_music_current = target_player
 
 func stop_music(fade: float = 1.0) -> void:
 	_current_track_name = ""
