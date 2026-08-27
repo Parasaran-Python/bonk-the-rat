@@ -14,6 +14,9 @@ var _grid: HBoxContainer = null
 var _tiles: Array[Button] = []
 
 func _ready() -> void:
+	if has_node("/root/AudioManager"):
+		get_node("/root/AudioManager").play_music("menu")
+
 	_ensure_nodes()
 	if is_inside_tree() and has_node("/root/SceneRouter"):
 		var args: Dictionary = get_node("/root/SceneRouter").current_args

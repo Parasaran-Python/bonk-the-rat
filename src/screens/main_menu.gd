@@ -9,7 +9,7 @@ extends Control
 
 func _ready() -> void:
 	if has_node("/root/AudioManager"):
-		get_node("/root/AudioManager").play_music("menu")
+		get_node("/root/AudioManager").play_music("menu", true)
 
 	if _play_btn != null:
 		_play_btn.pressed.connect(_on_play_pressed)

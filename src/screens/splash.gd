@@ -5,7 +5,7 @@ extends Control
 var _started := false
 
 func _ready() -> void:
-	if has_node("/root/AudioManager"):
+	if not OS.has_feature("web") and has_node("/root/AudioManager"):
 		var am: Node = get_node("/root/AudioManager")
 		am.play_music("menu")
 

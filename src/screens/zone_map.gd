@@ -9,6 +9,9 @@ extends Control
 @onready var _zone3_btn: Button = $CardsContainer/Zone3Card
 
 func _ready() -> void:
+	if has_node("/root/AudioManager"):
+		get_node("/root/AudioManager").play_music("menu")
+
 	if _back_btn != null:
 		_back_btn.pressed.connect(_on_back_pressed)
 	if _zone1_btn != null:
