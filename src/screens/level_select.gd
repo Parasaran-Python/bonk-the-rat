@@ -23,10 +23,29 @@ func _ready() -> void:
 		if args.has("zone"):
 			zone_filter = int(args["zone"])
 
+	if is_inside_tree():
+		get_viewport().size_changed.connect(_on_resized)
+
 	if _back_btn != null and not _back_btn.pressed.is_connected(_on_back_pressed):
 		_back_btn.pressed.connect(_on_back_pressed)
 
 	_build_tiles()
+	_on_resized()
+
+func _on_resized() -> void:
+	if _grid == null:
+		return
+	var vp_size := get_viewport_rect().size if is_inside_tree() else Vector2(1280, 720)
+	if vp_size.x <= 0:
+		vp_size.x = 1280
+	var base_w := 800.0
+	var max_w := vp_size.x * 0.92
+	if base_w > max_w:
+		var s := max_w / base_w
+		_grid.scale = Vector2(s, s)
+		_grid.pivot_offset = _grid.size * 0.5
+	else:
+		_grid.scale = Vector2.ONE
 
 func _ensure_nodes() -> void:
 	if _grid == null and has_node("GridContainer"):
@@ -65,8 +84,8 @@ func _build_tiles() -> void:
 	var start_id := (zone_filter - 1) * 5 + 1
 	for i in range(start_id, start_id + 5):
 		var btn := Button.new()
-		btn.custom_minimum_size = Vector2(180, 220)
-		btn.add_theme_font_size_override("font_size", 22)
+		btn.custom_minimum_size = Vector2(144, 190)
+		btn.add_theme_font_size_override("font_size", 20)
 
 		var unlocked := Progression.is_unlocked(i, stars_map)
 		var stars := int(stars_map.get(i, 0))

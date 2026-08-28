@@ -90,7 +90,10 @@ func _on_combo_milestone(mult: int) -> void:
 	if callout != "" and _popup_container != null:
 		var l := Label.new()
 		l.text = callout
-		l.position = Vector2(640 - 100, 300)
+		var vp_size := get_viewport().get_visible_rect().size if is_inside_tree() else Vector2(1280, 720)
+		if vp_size.x <= 0 or vp_size.y <= 0:
+			vp_size = Vector2(1280, 720)
+		l.position = Vector2(vp_size.x * 0.5 - 100, vp_size.y * 0.40)
 		l.add_theme_font_size_override("font_size", 36)
 		l.add_theme_color_override("font_color", Color("ffd166"))
 		_popup_container.add_child(l)

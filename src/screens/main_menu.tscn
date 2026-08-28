@@ -20,67 +20,64 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.15, 0.20, 0.25, 1)
 
-[node name="TitleBox" type="VBoxContainer" parent="."]
+[node name="CenterContainer" type="CenterContainer" parent="."]
 layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -300.0
-offset_top = 80.0
-offset_right = 300.0
-offset_bottom = 220.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
-theme_override_constants/separation = 12
+grow_vertical = 2
 
-[node name="Title" type="Label" parent="TitleBox"]
+[node name="MenuBox" type="VBoxContainer" parent="CenterContainer"]
+layout_mode = 2
+theme_override_constants/separation = 32
+alignment = 1
+
+[node name="TitleBox" type="VBoxContainer" parent="CenterContainer/MenuBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="Title" type="Label" parent="CenterContainer/MenuBox/TitleBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.85, 0.2, 1)
 theme_override_font_sizes/font_size = 56
 text = "BONK THE RAT!"
 horizontal_alignment = 1
 
-[node name="Subtitle" type="Label" parent="TitleBox"]
+[node name="Subtitle" type="Label" parent="CenterContainer/MenuBox/TitleBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 0.8)
 theme_override_font_sizes/font_size = 22
 text = "Arcade Whack-A-Rat Action"
 horizontal_alignment = 1
 
-[node name="VBox" type="VBoxContainer" parent="."]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -180.0
-offset_top = -40.0
-offset_right = 180.0
-offset_bottom = 220.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/separation = 18
-
-[node name="PlayBtn" type="Button" parent="VBox"]
-custom_minimum_size = Vector2(0, 52)
+[node name="VBox" type="VBoxContainer" parent="CenterContainer/MenuBox"]
+custom_minimum_size = Vector2(280, 0)
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="PlayBtn" type="Button" parent="CenterContainer/MenuBox/VBox"]
+custom_minimum_size = Vector2(280, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
 text = "PLAY CAMPAIGN"
 
-[node name="EndlessBtn" type="Button" parent="VBox"]
-custom_minimum_size = Vector2(0, 52)
+[node name="EndlessBtn" type="Button" parent="CenterContainer/MenuBox/VBox"]
+custom_minimum_size = Vector2(280, 50)
 layout_mode = 2
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 20
 text = "ENDLESS MODE"
 
-[node name="SettingsBtn" type="Button" parent="VBox"]
-custom_minimum_size = Vector2(0, 52)
+[node name="SettingsBtn" type="Button" parent="CenterContainer/MenuBox/VBox"]
+custom_minimum_size = Vector2(280, 50)
 layout_mode = 2
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 20
 text = "SETTINGS"
 
-[node name="QuitBtn" type="Button" parent="VBox"]
-custom_minimum_size = Vector2(0, 52)
+[node name="QuitBtn" type="Button" parent="CenterContainer/MenuBox/VBox"]
+custom_minimum_size = Vector2(280, 50)
 layout_mode = 2
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 20
 text = "QUIT"

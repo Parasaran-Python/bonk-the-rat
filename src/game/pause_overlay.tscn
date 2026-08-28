@@ -2,17 +2,20 @@
 
 [ext_resource type="Script" path="res://src/game/pause_overlay.gd" id="1_pause"]
 
-[node name="PauseOverlay" type="Control"]
+[node name="PauseOverlay" type="CanvasLayer"]
 process_mode = 3
+layer = 30
+script = ExtResource("1_pause")
+
+[node name="Root" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_pause")
 
-[node name="Dim" type="ColorRect" parent="."]
+[node name="Dim" type="ColorRect" parent="Root"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -21,7 +24,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.65)
 
-[node name="Panel" type="PanelContainer" parent="."]
+[node name="Panel" type="PanelContainer" parent="Root"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -35,30 +38,30 @@ offset_bottom = 140.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBox" type="VBoxContainer" parent="Panel"]
+[node name="VBox" type="VBoxContainer" parent="Root/Panel"]
 layout_mode = 2
 theme_override_constants/separation = 18
 alignment = 1
 
-[node name="Title" type="Label" parent="Panel/VBox"]
+[node name="Title" type="Label" parent="Root/Panel/VBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
 text = "GAME PAUSED"
 horizontal_alignment = 1
 
-[node name="ResumeBtn" type="Button" parent="Panel/VBox"]
+[node name="ResumeBtn" type="Button" parent="Root/Panel/VBox"]
 custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "RESUME"
 
-[node name="RestartBtn" type="Button" parent="Panel/VBox"]
+[node name="RestartBtn" type="Button" parent="Root/Panel/VBox"]
 custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "RESTART"
 
-[node name="QuitBtn" type="Button" parent="Panel/VBox"]
+[node name="QuitBtn" type="Button" parent="Root/Panel/VBox"]
 custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
