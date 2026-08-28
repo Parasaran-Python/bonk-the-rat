@@ -4,13 +4,17 @@ extends Control
 
 @onready var _back_btn: Button = $Header/BackBtn
 @onready var _total_stars_lbl: Label = $Header/TotalStarsBox/TotalStarsLabel if has_node("Header/TotalStarsBox/TotalStarsLabel") else ($Header/TotalStarsLabel if has_node("Header/TotalStarsLabel") else null)
-@onready var _zone1_btn: Button = $CardsContainer/Zone1Card
-@onready var _zone2_btn: Button = $CardsContainer/Zone2Card
-@onready var _zone3_btn: Button = $CardsContainer/Zone3Card
+@onready var _cards_container: Control = $CardsContainer if has_node("CardsContainer") else null
+@onready var _zone1_btn: Button = $CardsContainer/Zone1Card if has_node("CardsContainer/Zone1Card") else find_child("Zone1Card")
+@onready var _zone2_btn: Button = $CardsContainer/Zone2Card if has_node("CardsContainer/Zone2Card") else find_child("Zone2Card")
+@onready var _zone3_btn: Button = $CardsContainer/Zone3Card if has_node("CardsContainer/Zone3Card") else find_child("Zone3Card")
 
 func _ready() -> void:
 	if has_node("/root/AudioManager"):
 		get_node("/root/AudioManager").play_music("menu")
+
+	if is_inside_tree():
+		get_viewport().size_changed.connect(_on_resized)
 
 	if _back_btn != null:
 		_back_btn.pressed.connect(_on_back_pressed)
@@ -22,6 +26,22 @@ func _ready() -> void:
 		_zone3_btn.pressed.connect(func(): _select_zone(3))
 
 	_update_zones()
+	_on_resized()
+
+func _on_resized() -> void:
+	if _cards_container == null:
+		return
+	var vp_size := get_viewport_rect().size if is_inside_tree() else Vector2(1280, 720)
+	if vp_size.x <= 0:
+		vp_size.x = 1280
+	var base_w := 880.0
+	var max_w := vp_size.x * 0.92
+	if base_w > max_w:
+		var s := max_w / base_w
+		_cards_container.scale = Vector2(s, s)
+		_cards_container.pivot_offset = _cards_container.size * 0.5
+	else:
+		_cards_container.scale = Vector2.ONE
 
 func _update_zones() -> void:
 	var stars_map := {}

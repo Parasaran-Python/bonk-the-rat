@@ -22,8 +22,9 @@ func impact(pos: Vector2, strong: bool = false) -> void:
 	add_child(burst)
 	burst.emitting = true
 
-	var timer := get_tree().create_timer(burst.lifetime + 0.1)
-	timer.timeout.connect(burst.queue_free)
+	if is_inside_tree():
+		var timer := get_tree().create_timer(burst.lifetime + 0.1)
+		timer.timeout.connect(burst.queue_free)
 
 	if OS.get_name() == "Android" and Input.has_method("vibrate_handheld"):
 		Input.vibrate_handheld(35 if strong else 18)
@@ -46,10 +47,16 @@ func dirt_puff(pos: Vector2) -> void:
 	add_child(puff)
 	puff.emitting = true
 
-	var timer := get_tree().create_timer(0.35)
-	timer.timeout.connect(puff.queue_free)
+	if is_inside_tree():
+		var timer := get_tree().create_timer(0.35)
+		timer.timeout.connect(puff.queue_free)
 
-func confetti(pos: Vector2 = Vector2(640, 360)) -> void:
+func confetti(pos: Vector2 = Vector2.ZERO) -> void:
+	if pos == Vector2.ZERO:
+		var vp_size := get_viewport_rect().size if is_inside_tree() else Vector2(1280, 720)
+		if vp_size.x <= 0 or vp_size.y <= 0:
+			vp_size = Vector2(1280, 720)
+		pos = Vector2(vp_size.x * 0.5, vp_size.y * 0.4)
 	var colors := [Color("38bdf8"), Color("f472b6"), Color("facc15"), Color("4ade80")]
 	for c in colors:
 		var burst := CPUParticles2D.new()
@@ -69,13 +76,15 @@ func confetti(pos: Vector2 = Vector2(640, 360)) -> void:
 		burst.color = c
 		add_child(burst)
 		burst.emitting = true
-		var timer := get_tree().create_timer(1.4)
-		timer.timeout.connect(burst.queue_free)
+		if is_inside_tree():
+			var timer := get_tree().create_timer(1.4)
+			timer.timeout.connect(burst.queue_free)
 
 func hit_stop(duration_sec: float = 0.05) -> void:
 	Engine.time_scale = 0.05
-	var timer := get_tree().create_timer(duration_sec * 0.05, true, false, true)
-	timer.timeout.connect(func(): Engine.time_scale = 1.0)
+	if is_inside_tree():
+		var timer := get_tree().create_timer(duration_sec * 0.05, true, false, true)
+		timer.timeout.connect(func(): Engine.time_scale = 1.0)
 
 func shake(amount: float) -> void:
 	var shake_enabled := true

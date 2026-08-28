@@ -24,6 +24,7 @@ buses/default_bus_layout="res://default_bus_layout.tres"
 
 window/size/viewport_width=1280
 window/size/viewport_height=720
+window/size/resizable=true
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 window/handheld/orientation=4

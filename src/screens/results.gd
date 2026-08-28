@@ -78,7 +78,10 @@ func _ready() -> void:
 func _spawn_confetti() -> void:
 	var fx := FxLayer.new()
 	add_child(fx)
-	fx.confetti(Vector2(640, 260))
+	var vp_size := get_viewport_rect().size if is_inside_tree() else Vector2(1280, 720)
+	if vp_size.x <= 0 or vp_size.y <= 0:
+		vp_size = Vector2(1280, 720)
+	fx.confetti(Vector2(vp_size.x * 0.5, vp_size.y * 0.36))
 
 func _on_retry() -> void:
 	if has_node("/root/AudioManager"):

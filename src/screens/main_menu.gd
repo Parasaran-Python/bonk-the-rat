@@ -2,10 +2,10 @@ class_name MainMenu
 extends Control
 ## Main menu hub allowing mode selection, settings configuration and tutorial access.
 
-@onready var _play_btn: Button = $VBox/PlayBtn
-@onready var _endless_btn: Button = $VBox/EndlessBtn
-@onready var _settings_btn: Button = $VBox/SettingsBtn
-@onready var _quit_btn: Button = $VBox/QuitBtn
+@onready var _play_btn: Button = $CenterContainer/MenuBox/VBox/PlayBtn if has_node("CenterContainer/MenuBox/VBox/PlayBtn") else ($VBox/PlayBtn if has_node("VBox/PlayBtn") else find_child("PlayBtn"))
+@onready var _endless_btn: Button = $CenterContainer/MenuBox/VBox/EndlessBtn if has_node("CenterContainer/MenuBox/VBox/EndlessBtn") else ($VBox/EndlessBtn if has_node("VBox/EndlessBtn") else find_child("EndlessBtn"))
+@onready var _settings_btn: Button = $CenterContainer/MenuBox/VBox/SettingsBtn if has_node("CenterContainer/MenuBox/VBox/SettingsBtn") else ($VBox/SettingsBtn if has_node("VBox/SettingsBtn") else find_child("SettingsBtn"))
+@onready var _quit_btn: Button = $CenterContainer/MenuBox/VBox/QuitBtn if has_node("CenterContainer/MenuBox/VBox/QuitBtn") else ($VBox/QuitBtn if has_node("VBox/QuitBtn") else find_child("QuitBtn"))
 
 func _ready() -> void:
 	if has_node("/root/AudioManager"):

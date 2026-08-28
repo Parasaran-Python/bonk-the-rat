@@ -18,6 +18,8 @@ var _hole_scene := preload("res://src/game/hole.tscn")
 @onready var _fx: FxLayer = $FxLayer if has_node("FxLayer") else null
 @onready var _mallet: Mallet = $Mallet if has_node("Mallet") else null
 
+var _board_scale: float = 1.0
+
 func _ready() -> void:
 	if _backdrop == null and has_node("Backdrop"):
 		_backdrop = $Backdrop
@@ -27,6 +29,9 @@ func _ready() -> void:
 		_fx = $FxLayer
 	if _mallet == null and has_node("Mallet"):
 		_mallet = $Mallet
+
+	if is_inside_tree():
+		get_viewport().size_changed.connect(_reposition_holes)
 
 func setup(level_cfg: LevelConfig, interval_fn: Callable = Callable()) -> void:
 	_cfg = level_cfg
@@ -47,20 +52,17 @@ func setup(level_cfg: LevelConfig, interval_fn: Callable = Callable()) -> void:
 
 	var cols: int = _cfg.grid_columns if _cfg != null else 3
 	var rows: int = _cfg.grid_rows if _cfg != null else 2
-	var spacing_x := 190.0
-	var spacing_y := 140.0
-	var x0 := 640.0 - (float(cols - 1) * spacing_x * 0.5)
-	var y0 := 460.0 - (float(rows - 1) * spacing_y * 0.5)
 
 	for r in range(rows):
 		for c in range(cols):
 			var hole: Hole = _hole_scene.instantiate()
-			hole.position = Vector2(x0 + float(c) * spacing_x, y0 + float(r) * spacing_y)
 			hole.z_index = r * 10
 			_holes_container.add_child(hole)
 			hole.setup(_theme)
 			_holes.append(hole)
 			hole.rat_escaped.connect(func(rat): _on_rat_escaped(rat.rat_id))
+
+	_reposition_holes()
 
 	_director = SpawnDirector.new()
 	_director.setup(-1)
@@ -72,6 +74,44 @@ func setup(level_cfg: LevelConfig, interval_fn: Callable = Callable()) -> void:
 		_director.set_interval_source(interval_fn)
 	elif _cfg != null:
 		_director.set_interval_source(_cfg.interval_at)
+
+func _reposition_holes() -> void:
+	if _cfg == null or _holes.is_empty():
+		return
+	var cols: int = _cfg.grid_columns if _cfg != null else 3
+	var rows: int = _cfg.grid_rows if _cfg != null else 2
+	var vp_size := get_viewport_rect().size if is_inside_tree() else Vector2(1280, 720)
+	if vp_size.x <= 0 or vp_size.y <= 0:
+		vp_size = Vector2(1280, 720)
+
+	var base_spacing_x := 190.0
+	var base_spacing_y := 140.0
+	var total_w := float(cols - 1) * base_spacing_x + 180.0
+	var total_h := float(rows - 1) * base_spacing_y + 140.0
+
+	var max_w := vp_size.x * 0.90
+	var max_h := vp_size.y * 0.52
+	var scale_w := max_w / total_w if total_w > max_w else 1.0
+	var scale_h := max_h / total_h if total_h > max_h else 1.0
+	_board_scale = minf(1.0, minf(scale_w, scale_h))
+
+	var center_x := vp_size.x * 0.5
+	var center_y := vp_size.y * 0.64
+	var spacing_x := base_spacing_x * _board_scale
+	var spacing_y := base_spacing_y * _board_scale
+	var x0 := center_x - (float(cols - 1) * spacing_x * 0.5)
+	var y0 := center_y - (float(rows - 1) * spacing_y * 0.5)
+
+	var idx := 0
+	for r in range(rows):
+		for c in range(cols):
+			if idx < _holes.size() and is_instance_valid(_holes[idx]):
+				_holes[idx].position = Vector2(x0 + float(c) * spacing_x, y0 + float(r) * spacing_y)
+				_holes[idx].scale = Vector2(_board_scale, _board_scale)
+			idx += 1
+
+	if _backdrop != null:
+		_backdrop.queue_redraw()
 
 func _active_rats_count() -> int:
 	var c := 0
@@ -112,7 +152,7 @@ func swing_at(pos: Vector2) -> void:
 		if is_instance_valid(h) and h.occupied():
 			cands.append({"pos": h.rat_head_global_pos(), "hole": h, "index": i})
 
-	var pick_idx := HitTest.pick(pos, 78.0, cands)
+	var pick_idx := HitTest.pick(pos, 78.0 * _board_scale, cands)
 	if pick_idx == -1:
 		_trigger_whiff()
 	else:

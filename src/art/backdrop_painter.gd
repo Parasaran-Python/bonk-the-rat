@@ -25,15 +25,20 @@ static func draw_backdrop(canvas: CanvasItem, theme: int, size: Vector2) -> void
 static func _draw_pantry(canvas: CanvasItem, size: Vector2, bg_dark: Color, wood: Color, accent: Color) -> void:
 	# Vertical wallpaper stripes
 	var stripe_w := 60.0
-	for x in range(0, int(size.x), int(stripe_w * 2)):
+	for x in range(0, int(size.x) + int(stripe_w * 2), int(stripe_w * 2)):
 		canvas.draw_rect(Rect2(x, 0, stripe_w, size.y), bg_dark.lightened(0.08))
 
-	# Top pantry shelves
-	for shelf_y in [110.0, 210.0]:
+	# Top pantry shelves (proportional to screen height)
+	var shelf1_y := size.y * 0.15
+	var shelf2_y := size.y * 0.29
+	for shelf_y in [shelf1_y, shelf2_y]:
 		canvas.draw_rect(Rect2(0, shelf_y, size.x, 16), wood)
 		canvas.draw_line(Vector2(0, shelf_y + 16), Vector2(size.x, shelf_y + 16), wood.darkened(0.4), 2.0)
-		# Decorative jam jars on shelves
-		for j_x in [120.0, 280.0, 600.0, 840.0, 1080.0]:
+		# Decorative jam jars dynamically spaced across width
+		var jar_count := maxi(3, int(size.x / 240.0))
+		var jar_step := size.x / float(jar_count)
+		for j in range(jar_count):
+			var j_x := (float(j) + 0.5) * jar_step - 11.0
 			canvas.draw_rect(Rect2(j_x, shelf_y - 28, 22, 28), accent)
 			canvas.draw_circle(Vector2(j_x + 11, shelf_y - 28), 7.0, Color("fef08a"))
 
@@ -46,7 +51,7 @@ static func _draw_basement(canvas: CanvasItem, size: Vector2, bg_dark: Color, wo
 	# Brick courses
 	var row_h := 36.0
 	var brick_w := 90.0
-	for r in range(int(size.y / row_h) + 1):
+	for r in range(int(size.y / row_h) + 2):
 		var y := r * row_h
 		canvas.draw_line(Vector2(0, y), Vector2(size.x, y), bg_dark.darkened(0.3), 2.0)
 		var offset := (r % 2) * (brick_w * 0.5)
@@ -55,13 +60,17 @@ static func _draw_basement(canvas: CanvasItem, size: Vector2, bg_dark: Color, wo
 			canvas.draw_line(Vector2(x, y), Vector2(x, y + row_h), bg_dark.darkened(0.3), 2.0)
 
 	# Dripping pipe across top
-	canvas.draw_rect(Rect2(0, 40, size.x, 18), Color("334155"))
-	canvas.draw_line(Vector2(0, 40), Vector2(size.x, 40), Color("64748b"), 2.0)
-	# Pipe joints
-	for px in [150.0, 450.0, 850.0, 1150.0]:
-		canvas.draw_rect(Rect2(px, 36, 16, 26), Color("1e293b"))
+	var pipe_y := size.y * 0.055
+	canvas.draw_rect(Rect2(0, pipe_y, size.x, 18), Color("334155"))
+	canvas.draw_line(Vector2(0, pipe_y), Vector2(size.x, pipe_y), Color("64748b"), 2.0)
+	# Pipe joints dynamically spaced across width
+	var joint_count := maxi(3, int(size.x / 300.0))
+	var joint_step := size.x / float(joint_count)
+	for j in range(joint_count):
+		var px := (float(j) + 0.5) * joint_step - 8.0
+		canvas.draw_rect(Rect2(px, pipe_y - 4, 16, 26), Color("1e293b"))
 		# Teal slime/water drip
-		canvas.draw_circle(Vector2(px + 8, 70), 5.0, accent)
+		canvas.draw_circle(Vector2(px + 8, pipe_y + 30), 5.0, accent)
 
 	# Dark cellar stone floor
 	var floor_y := size.y * 0.44
@@ -70,7 +79,7 @@ static func _draw_basement(canvas: CanvasItem, size: Vector2, bg_dark: Color, wo
 
 static func _draw_kitchen(canvas: CanvasItem, size: Vector2, bg_dark: Color, wood: Color, accent: Color) -> void:
 	# Midnight sky background with circular moon window
-	var window_center := Vector2(size.x * 0.82, 130.0)
+	var window_center := Vector2(size.x * 0.82, size.y * 0.18)
 	canvas.draw_circle(window_center, 70.0, Color("0f172a"))
 	# Crescent moon glow
 	canvas.draw_circle(window_center, 58.0, Color("fef08a"))
@@ -81,9 +90,9 @@ static func _draw_kitchen(canvas: CanvasItem, size: Vector2, bg_dark: Color, woo
 
 	# Kitchen tile grid
 	var tile_size := 50.0
-	for tx in range(0, int(size.x), int(tile_size)):
+	for tx in range(0, int(size.x) + int(tile_size), int(tile_size)):
 		canvas.draw_line(Vector2(tx, 0), Vector2(tx, size.y * 0.45), bg_dark, 1.5)
-	for ty in range(0, int(size.y * 0.45), int(tile_size)):
+	for ty in range(0, int(size.y * 0.45) + int(tile_size), int(tile_size)):
 		canvas.draw_line(Vector2(0, ty), Vector2(size.x, ty), bg_dark, 1.5)
 
 	# Midnight kitchen counter

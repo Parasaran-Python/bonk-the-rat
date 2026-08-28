@@ -29,72 +29,72 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -300.0
-offset_top = -220.0
-offset_right = 300.0
-offset_bottom = 220.0
+offset_left = -260.0
+offset_top = -200.0
+offset_right = 260.0
+offset_bottom = 200.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 16
+theme_override_constants/separation = 14
 alignment = 1
 
 [node name="Title" type="Label" parent="VBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.85, 0.2, 1)
-theme_override_font_sizes/font_size = 48
+theme_override_font_sizes/font_size = 44
 text = "LEVEL COMPLETE!"
 horizontal_alignment = 1
 
 [node name="StarRating" type="Control" parent="VBox"]
-custom_minimum_size = Vector2(240, 64)
+custom_minimum_size = Vector2(240, 56)
 layout_mode = 2
 script = ExtResource("2_stars")
-star_size = 28.0
-spacing = 16.0
+star_size = 26.0
+spacing = 14.0
 
 [node name="ScoreLabel" type="Label" parent="VBox"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 32
+theme_override_font_sizes/font_size = 30
 text = "SCORE: 3500"
 horizontal_alignment = 1
 
 [node name="BestLabel" type="Label" parent="VBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.3, 0.9, 0.4, 1)
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 18
 text = "NEW BEST SCORE!"
 horizontal_alignment = 1
 
 [node name="ComboLabel" type="Label" parent="VBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 18
 text = "BEST COMBO: 12 HITS"
 horizontal_alignment = 1
 
 [node name="Spacer" type="Control" parent="VBox"]
-custom_minimum_size = Vector2(0, 16)
+custom_minimum_size = Vector2(0, 10)
 layout_mode = 2
 
 [node name="BtnBox" type="HBoxContainer" parent="VBox"]
 layout_mode = 2
-theme_override_constants/separation = 20
+theme_override_constants/separation = 16
 alignment = 1
 
 [node name="RetryBtn" type="Button" parent="VBox/BtnBox"]
-custom_minimum_size = Vector2(140, 50)
+custom_minimum_size = Vector2(120, 46)
 layout_mode = 2
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 18
 text = "RETRY"
 
 [node name="NextBtn" type="Button" parent="VBox/BtnBox"]
-custom_minimum_size = Vector2(160, 50)
+custom_minimum_size = Vector2(140, 46)
 layout_mode = 2
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 18
 text = "NEXT LEVEL"
 
 [node name="MapBtn" type="Button" parent="VBox/BtnBox"]
-custom_minimum_size = Vector2(140, 50)
+custom_minimum_size = Vector2(120, 46)
 layout_mode = 2
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 18
 text = "ZONE MAP"

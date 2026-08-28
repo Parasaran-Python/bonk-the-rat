@@ -71,36 +71,36 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -540.0
-offset_top = -140.0
-offset_right = 540.0
-offset_bottom = 180.0
+offset_left = -440.0
+offset_top = -130.0
+offset_right = 440.0
+offset_bottom = 150.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 32
+theme_override_constants/separation = 24
 alignment = 1
 
 [node name="Zone1Card" type="Button" parent="CardsContainer"]
-custom_minimum_size = Vector2(320, 280)
+custom_minimum_size = Vector2(270, 260)
 layout_mode = 2
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 20
 text = "ZONE 1: PANTRY
 
 STARS: 0 / 15"
 
 [node name="Zone2Card" type="Button" parent="CardsContainer"]
-custom_minimum_size = Vector2(320, 280)
+custom_minimum_size = Vector2(270, 260)
 layout_mode = 2
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 20
 text = "ZONE 2: BASEMENT
 
 LOCKED
 (Clear Level 5)"
 
 [node name="Zone3Card" type="Button" parent="CardsContainer"]
-custom_minimum_size = Vector2(320, 280)
+custom_minimum_size = Vector2(270, 260)
 layout_mode = 2
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 20
 text = "ZONE 3: KITCHEN
 
 LOCKED
