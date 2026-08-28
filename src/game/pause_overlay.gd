@@ -1,14 +1,14 @@
 class_name PauseOverlay
-extends Control
+extends CanvasLayer
 ## Modal pause screen handling resume, restart and quit actions.
 
 signal resumed()
 signal restarted()
 signal quit_to_map()
 
-@onready var _resume_btn: Button = $Panel/VBox/ResumeBtn
-@onready var _restart_btn: Button = $Panel/VBox/RestartBtn
-@onready var _quit_btn: Button = $Panel/VBox/QuitBtn
+@onready var _resume_btn: Button = $Root/Panel/VBox/ResumeBtn if has_node("Root/Panel/VBox/ResumeBtn") else ($Panel/VBox/ResumeBtn if has_node("Panel/VBox/ResumeBtn") else find_child("ResumeBtn"))
+@onready var _restart_btn: Button = $Root/Panel/VBox/RestartBtn if has_node("Root/Panel/VBox/RestartBtn") else ($Panel/VBox/RestartBtn if has_node("Panel/VBox/RestartBtn") else find_child("RestartBtn"))
+@onready var _quit_btn: Button = $Root/Panel/VBox/QuitBtn if has_node("Root/Panel/VBox/QuitBtn") else ($Panel/VBox/QuitBtn if has_node("Panel/VBox/QuitBtn") else find_child("QuitBtn"))
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -21,11 +21,13 @@ func _ready() -> void:
 		_quit_btn.pressed.connect(_on_quit)
 
 func show_pause() -> void:
-	get_tree().paused = true
+	if is_inside_tree():
+		get_tree().paused = true
 	visible = true
 
 func hide_pause() -> void:
-	get_tree().paused = false
+	if is_inside_tree():
+		get_tree().paused = false
 	visible = false
 
 func _on_resume() -> void:

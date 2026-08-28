@@ -27,6 +27,8 @@ var _loaded_path := ""
 
 func _ready() -> void:
 	_ensure_loaded()
+	if DisplayServer.has_feature(DisplayServer.FEATURE_ORIENTATION):
+		DisplayServer.screen_set_orientation(DisplayServer.SCREEN_LANDSCAPE)
 
 func set_music_volume(value: float) -> void:
 	music_volume = clampf(value, 0.0, 1.0)

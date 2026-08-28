@@ -73,3 +73,15 @@ func test_confetti_responsive_default_position() -> void:
 	fx.confetti()
 	ok(fx.get_child_count() > 0, "confetti bursts created")
 	fx.queue_free()
+
+func test_pause_overlay_responsive_and_layering() -> void:
+	var pause: PauseOverlay = load("res://src/game/pause_overlay.tscn").instantiate()
+	if root != null:
+		root.add_child(pause)
+	ok(pause.layer == 30, "pause overlay on layer 30")
+	ok(pause.has_node("Root/Panel"), "pause overlay has centered panel")
+	pause.show_pause()
+	ok(pause.visible, "pause overlay visible when shown")
+	pause.hide_pause()
+	ok(not pause.visible, "pause overlay hidden when dismissed")
+	pause.queue_free()
