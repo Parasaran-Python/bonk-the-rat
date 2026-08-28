@@ -145,9 +145,57 @@ jobs:
           name: bonk-the-rat-windows
           path: bonk-the-rat-windows-x86_64.zip
 
+  build-android:
+    name: Export Android (ARM64 APK)
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Godot & Export Templates
+        uses: ./.github/actions/setup-godot
+        with:
+          version: "4.6.1-stable"
+          templates: "true"
+
+      - name: Configure Android Keystore & Godot Settings
+        run: |
+          mkdir -p ~/.local/share/godot/keystores
+          keytool -keyalg RSA -genkeypair -alias androiddebugkey -keypass android \
+            -keystore ~/.local/share/godot/keystores/debug.keystore \
+            -storepass android -dname "CN=Android Debug,O=Android,C=US" -validity 9999 -deststoretype pkcs12
+
+          mkdir -p ~/.config/godot
+          cat <<EOF > ~/.config/godot/editor_settings-4.6.tres
+          [gd_resource type="EditorSettings" format=3]
+
+          [resource]
+          export/android/android_sdk_path = "$ANDROID_HOME"
+          export/android/debug_keystore = "$HOME/.local/share/godot/keystores/debug.keystore"
+          export/android/debug_keystore_pass = "android"
+          export/android/debug_keystore_user = "androiddebugkey"
+          EOF
+          cp ~/.config/godot/editor_settings-4.6.tres ~/.config/godot/editor_settings-4.tres
+
+      - name: Export Android APK
+        run: make export-android
+
+      - name: Upload Android Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: bonk-the-rat-android
+          path: export/android/bonk-the-rat.apk
+
   release:
     name: Publish GitHub Release
-    needs: [build-web, build-linux, build-windows]
+    needs: [build-web, build-linux, build-windows, build-android]
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     permissions:
@@ -169,6 +217,7 @@ jobs:
             release-assets/bonk-the-rat-linux-x86_64.tar.gz
             release-assets/bonk-the-rat-windows-x86_64.zip
             release-assets/bonk-the-rat-web.zip
+            release-assets/bonk-the-rat.apk
           draft: false
           prerelease: false
           generate_release_notes: true
