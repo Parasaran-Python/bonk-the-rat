@@ -30,6 +30,21 @@ func test_board_responsive_repositioning_and_scaling() -> void:
 
 	board.queue_free()
 
+func test_board_5x3_layout_fits_viewport() -> void:
+	var board: Node2D = load("res://src/game/board.tscn").instantiate()
+	if root != null:
+		root.add_child(board)
+	var cfg := LevelConfig.new()
+	cfg.grid_columns = 5
+	cfg.grid_rows = 3
+	board.setup(cfg)
+	board._reposition_holes()
+	eq(board._holes.size(), 15, "15 holes created")
+	for h in board._holes:
+		ok(h.position.x > 50.0 and h.position.x < 1230.0, "hole x inside screen bounds")
+		ok(h.position.y > 100.0 and h.position.y < 700.0, "hole y inside screen bounds")
+	board.queue_free()
+
 func test_zone_map_responsive_resizing() -> void:
 	var zm: ZoneMap = load("res://src/screens/zone_map.tscn").instantiate()
 	if root != null:
@@ -72,6 +87,24 @@ func test_confetti_responsive_default_position() -> void:
 		root.add_child(fx)
 	fx.confetti()
 	ok(fx.get_child_count() > 0, "confetti bursts created")
+	fx.queue_free()
+
+func test_fx_shockwave_creation() -> void:
+	var fx := FxLayer.new()
+	if root != null:
+		root.add_child(fx)
+	fx.shockwave(Vector2(300, 200), Color("fbbf24"))
+	ok(fx.get_child_count() > 0, "shockwave spawned")
+	fx.queue_free()
+
+func test_fx_sparks_and_impact_creation() -> void:
+	var fx := FxLayer.new()
+	if root != null:
+		root.add_child(fx)
+	fx.impact_sparks(Vector2(300, 200), true)
+	ok(fx.get_child_count() > 0, "impact sparks spawned")
+	fx.impact(Vector2(400, 250), false)
+	ok(fx.get_child_count() >= 3, "full impact spawned radial burst, shockwave, and sparks")
 	fx.queue_free()
 
 func test_pause_overlay_responsive_and_layering() -> void:

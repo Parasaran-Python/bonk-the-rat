@@ -82,6 +82,19 @@ func endless_wave() -> int:
 func current_mult() -> int:
 	return Scoring.multiplier_for(combo_hits)
 
+func trigger_powerup(kind: String, dur: float = -1.0) -> void:
+	if not _running:
+		return
+	if kind == "freeze":
+		var d := dur if dur > 0.0 else FREEZE_SECONDS
+		_freeze_left = d
+		powerup_started.emit("freeze", d)
+	elif kind == "double" or kind == "star":
+		var d := dur if dur > 0.0 else DOUBLE_SECONDS
+		_double_left = d
+		double_active = true
+		powerup_started.emit("double", d)
+
 func on_rat_bonked(rat_id: String) -> int:
 	if not _running:
 		return 0
@@ -94,13 +107,8 @@ func on_rat_bonked(rat_id: String) -> int:
 	var base_pts: int = int(info.get("points", 100))
 	var p_up: String = str(info.get("powerup", ""))
 
-	if p_up == "freeze":
-		_freeze_left = FREEZE_SECONDS
-		powerup_started.emit("freeze", FREEZE_SECONDS)
-	elif p_up == "double":
-		_double_left = DOUBLE_SECONDS
-		double_active = true
-		powerup_started.emit("double", DOUBLE_SECONDS)
+	if p_up != "":
+		trigger_powerup(p_up)
 
 	combo_hits += 1
 	best_combo = maxi(best_combo, combo_hits)

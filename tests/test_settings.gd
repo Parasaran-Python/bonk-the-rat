@@ -1,7 +1,9 @@
 extends TestCase
 
 func test_defaults_and_persistence() -> void:
-	var path := "user://test_settings_%d.cfg" % Time.get_ticks_msec()
+	var path := "user://test_settings_%d_%d.cfg" % [Time.get_ticks_msec(), randi() % 100000]
+	if FileAccess.file_exists(path):
+		DirAccess.remove_absolute(path)
 	var s1: Node = load("res://src/autoload/settings.gd").new()
 	s1.SETTINGS_PATH = path
 	eq(s1.music_volume, 0.8, "music default")
@@ -13,11 +15,16 @@ func test_defaults_and_persistence() -> void:
 	s2.SETTINGS_PATH = path
 	eq(s2.music_volume, 0.25, "volume persisted")
 	ok(not s2.shake_enabled, "shake persisted")
+	if FileAccess.file_exists(path):
+		DirAccess.remove_absolute(path)
 
 func test_volume_clamps() -> void:
+	var path := "user://test_settings_clamp_%d.cfg" % [randi() % 100000]
 	var s: Node = load("res://src/autoload/settings.gd").new()
-	s.SETTINGS_PATH = "user://test_settings_clamp.cfg"
+	s.SETTINGS_PATH = path
 	s.set_music_volume(5.0)
 	eq(s.music_volume, 1.0, "clamped high")
 	s.set_sfx_volume(-1.0)
 	eq(s.sfx_volume, 0.0, "clamped low")
+	if FileAccess.file_exists(path):
+		DirAccess.remove_absolute(path)

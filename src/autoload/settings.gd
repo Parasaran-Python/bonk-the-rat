@@ -31,14 +31,17 @@ func _ready() -> void:
 		DisplayServer.screen_set_orientation(DisplayServer.SCREEN_LANDSCAPE)
 
 func set_music_volume(value: float) -> void:
+	_ensure_loaded()
 	music_volume = clampf(value, 0.0, 1.0)
 	_persist()
 
 func set_sfx_volume(value: float) -> void:
+	_ensure_loaded()
 	sfx_volume = clampf(value, 0.0, 1.0)
 	_persist()
 
 func set_shake_enabled(value: bool) -> void:
+	_ensure_loaded()
 	shake_enabled = value
 	_persist()
 
@@ -48,6 +51,9 @@ func _ensure_loaded() -> void:
 	_loaded_path = SETTINGS_PATH
 	var cfg := ConfigFile.new()
 	if cfg.load(SETTINGS_PATH) != OK:
+		music_volume = 0.8
+		sfx_volume = 1.0
+		shake_enabled = true
 		return
 	music_volume = clampf(float(cfg.get_value("audio", "music", 0.8)), 0.0, 1.0)
 	sfx_volume = clampf(float(cfg.get_value("audio", "sfx", 1.0)), 0.0, 1.0)

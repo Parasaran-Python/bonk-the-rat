@@ -1,6 +1,49 @@
 # Art & Audio Reference
 
-## Audio Pipeline
+## 1. Procedural Vector Graphics & Visual Pipeline
+
+All visuals in **BONK THE RAT!** are 100% procedurally rendered via Godot CanvasItem 2D vector primitives (`_draw()`), adhering to a strict zero-external-asset architecture (no external PNG, JPG, or SVG dependencies).
+
+### Procedural Mallet Design (`src/art/mallet_painter.gd` & `src/game/mallet.gd`)
+- **Mahogany Mallet Head:** Solid hardwood grain block with beveled lighting highlight, rounded edges, and dark wood shadows.
+- **Dual Brass Retention Bands:** Polished golden-yellow metallic rings with specular highlight bands.
+- **Cross-Wrapped Leather Grip:** Ash-wood handle wrapped with criss-cross dark leather strapping.
+- **Arc Motion Swoosh:** Dynamic curved motion trail rendered during active down-swings.
+- **Kinematics & Squash/Stretch:**
+  - Anticipation tilt ($-65^\circ$) $\rightarrow$ snap impact ($+15^\circ$) with squash deformation (`Vector2(1.25, 0.75)`).
+  - Spring-back recoil bounce restoring to resting state (`0^\circ`, `Vector2.ONE`).
+
+### Expressive Rat Facial Expressions & Species Polish (`src/art/rat_painter.gd`)
+- **Facial Animation States:**
+  - **Normal:** Bright, alert eyes with reflective specular dots and twitching whiskers.
+  - **Blinking:** Periodic autonomous eyelid blinks driven by sinusoidal timers.
+  - **Dazed:** Triggered upon strike/stagger; renders dizzy spiral eyes (`@_@`) and orbiting comic stars above the head.
+  - **Fleeing:** Squinted panic expression when retreating into the hole.
+- **Species Accessories:**
+  - **Normal Rat:** Classic pink ears, snout, and dark whiskers.
+  - **Zoomer Rat:** Aerodynamic racing cap with reflective aviator goggles.
+  - **Tank Rat:** Heavy riveted iron kettle helmet with beveled metallic gradient (2 HP).
+  - **Golden Rat:** Gleaming royal crown studded with ruby and emerald gems.
+  - **Clock Rat:** Antique brass pocketwatch dial with miniature clock hands.
+  - **Star Rat:** Celestial golden star insignia with shimmering pulse glow.
+  - **Boom Rat:** Black powder fuse bomb with glowing orange ember sparks (Hazard!).
+  - **Whiskers the Cat:** Detailed tuxedo feline markings and forbidden warning border.
+
+### Flying Rat Glider Actor (`src/game/flying_rat.gd` & `src/game/flying_rat_visual.gd`)
+- **Visuals:** Leather aviator helmet, round pilot goggles, flapping bat/glider wings (dynamic sinusoidal flapping), and dangling golden bonus pouch.
+- **Motion:** Continuous sinusoidal cruising wave across the top third of the board ($Y(t) = Y_0 + \sin(t \times 4.0) \times 28.0$).
+- **Defeat Animation:** Mid-air strike initiates spinning tumble descent with burst particles.
+
+### Particle & Screen Juice Effects (`src/game/fx_layer.gd`)
+- **Expanding Shockwave Rings:** Radial stroke rings that expand outward ($8\text{px} \rightarrow 50\text{px}$) with rapid alpha decay upon impact.
+- **Directional Bonk Sparks:** High-velocity spark burst particles radiating from the point of impact.
+- **Pop Dirt Clouds:** Brown procedural smoke puffs whenever rats surface or submerge.
+- **Confetti Cannons:** Multi-color celebratory confetti bursts upon 3-star level completion and bonus events.
+- **Screen Shake & Hit-Stop:** Impact micro-freezes (12–40ms) and camera shake based on strike severity.
+
+---
+
+## 2. Audio Pipeline
 
 All sound effects and music tracks in **BONK THE RAT!** are synthesized procedurally via GDScript tool scripts without external sample dependencies.
 

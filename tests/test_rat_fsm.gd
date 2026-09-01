@@ -23,3 +23,38 @@ func test_rat_scene_instantiates_and_strikes_synchronously() -> void:
 	ok(not r.visible, "rat starts hidden")
 	eq(r.position.y, Rat.DOWN_OFFSET, "rat starts at down offset")
 	r.queue_free()
+
+func test_rat_expression_state_on_hit() -> void:
+	var rat: Rat = load("res://src/game/rat.tscn").instantiate()
+	if root != null:
+		root.add_child(rat)
+	rat.pop_up("tank")
+	eq(rat.expression, "normal", "starts normal")
+	rat.strike()
+	eq(rat.expression, "dazed", "becomes dazed on hit")
+	rat.queue_free()
+
+func test_rat_expression_fleeing_and_blinking() -> void:
+	var rat: Rat = load("res://src/game/rat.tscn").instantiate()
+	if root != null:
+		root.add_child(rat)
+	rat.pop_up("norm")
+	eq(rat.expression, "normal", "starts normal")
+	rat.flee_early()
+	eq(rat.expression, "fleeing", "becomes fleeing on flee_early")
+	rat.queue_free()
+
+func test_rat_painter_all_species_expressions() -> void:
+	var rat: Rat = load("res://src/game/rat.tscn").instantiate()
+	if root != null:
+		root.add_child(rat)
+	for id in ["norm", "zoomer", "tank", "golden", "boom", "clock", "star", "whiskers"]:
+		rat.pop_up(id)
+		for expr in ["normal", "blinking", "dazed", "fleeing"]:
+			rat.expression = expr
+			ok(rat.expression == expr, "species %s set expression %s" % [id, expr])
+	rat.queue_free()
+
+
+
+

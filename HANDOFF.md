@@ -2,33 +2,32 @@
 
 **Project:** BONK THE RAT! — Arcade Whack-A-Rat Parlour Action  
 **Engine:** Godot 4.6.1 stable (Linux x86_64)  
-**Status:** **100% Complete & Verified (All 18 Implementation Tasks Complete)**  
-**Automated Tests:** 358 checks, 0 failing cases (`make test` green, Exit Code 0)  
+**Status:** **100% Complete & Verified (All Gameplay & Graphics Overhaul Tasks Complete)**  
+**Automated Tests:** 544 checks, 0 failing cases (`make test` green, Exit Code 0)  
 
 ---
 
-## 1. Accomplishments & Verification Summary
+## 1. Feature Overhaul Milestones (2026-09-01 Release)
 
-All 18 planned milestones from `docs/superpowers/plans/2026-08-26-bonk-the-rat.md` have been fully implemented, tested, and committed:
+All 8 tasks from `docs/superpowers/plans/2026-09-01-gameplay-graphics-overhaul.md` have been fully implemented, verified, and committed:
 
-- [x] **Task 1:** Godot 4 headless harness + unit testing foundation (`2b5fe16`)
-- [x] **Task 2:** Custom resource `LevelConfig` + Rat types data model (`3b950dc`)
-- [x] **Task 3:** Campaign level generator — 15 levels + endless config (`990ce48`)
-- [x] **Task 4:** Progression logic — star thresholds, unlocks, chapter gates (`1e6878d`)
-- [x] **Task 5:** Scoring & combo system with decay timers (`fcfdf4f`)
-- [x] **Task 6:** Atomic save persistence + recovery logic (`8004f27`)
-- [x] **Task 7:** Spawn director — fair deterministic hole selection & concurrency caps (`17b8f9e`)
-- [x] **Task 8:** Audio synthesis toolkit + 18 sound effects (`12b57ff`)
-- [x] **Task 9:** Zone music loops (5 tracks) + volume wiring (`f42e97b`)
-- [x] **Task 10:** Procedural vector art painters (Rats, Holes, Mallet, Backdrops) + Rat FSM (`8ffd30f`)
-- [x] **Task 11:** Authoritative `Game` autoload singleton & rules engine (`8edd043`)
-- [x] **Task 12:** Playable Board loop, Hole actors, Mallet swing, and Hit detection (`6f4943f`)
-- [x] **Task 13:** Full screen flow, HUD, Pause overlay, and SceneRouter (`66e5d34`)
-- [x] **Task 14:** Interactive first-launch tutorial (`6022e10`)
-- [x] **Task 15:** Endless mode with local Top-10 leaderboard (`8077d4c`)
-- [x] **Task 16:** Juice pass — particles, screen shake, hit-stop, combo callouts, tints (`5304521`)
-- [x] **Task 17:** Export presets & build targets for Linux, Web, and Android (`c36893d`)
-- [x] **Task 18:** Comprehensive documentation set (`docs/ARCHITECTURE.md`, `docs/LEVEL_DESIGN.md`, `docs/EXPORT_GUIDE.md`, `docs/ART_AUDIO.md`, `README.md`)
+- [x] **Task 1: Level Progression & Dynamic Grid Tuning ($3\times2 \rightarrow 5\times3$)** (`5c599f3`)
+  - Updated 15-level campaign with graduated grid sizing ($3\times2 \rightarrow 3\times3 \rightarrow 4\times3 \rightarrow 5\times3$), tighter spawn intervals, and scaled star quotas.
+  - Expanded Endless Mode to a 15-hole $5\times3$ arena.
+- [x] **Task 2: Board Responsive Layout & $5 \times 3$ Scaling Support** (`8f8a7e4`)
+  - Implemented dynamic bounding box calculation and automatic downscaling in `Board._reposition_holes()`.
+- [x] **Task 3: Mallet Visuals, Arc Swing & Squash/Recoil Animations** (`b5ef788`)
+  - Enhanced procedural mahogany grain mallet, dual brass rings, leather criss-cross grip, swing motion swoosh trail, and spring recoil.
+- [x] **Task 4: Expressive Rat Visuals & Facial Animation States** (`97d3f48`)
+  - Added autonomous blinking, dazed spiral eyes (`@_@`), orbiting comic stars upon hits, and species-specific accessories.
+- [x] **Task 5: Juice FX — Impact Shockwave Rings & Directional Sparks** (`9ccfca0`)
+  - Added expanding radial shockwave rings with color-matched alpha decay and high-velocity spark bursts on impacts.
+- [x] **Task 6: Flying Rat Actor, Flapping Wings & Flight Trajectory** (`dc14d99`)
+  - Implemented autonomous airborne glider rat with leather aviator helmet, animated flapping bat/glider wings, sinusoidal cruising wave, and tumble-spin defeat animations.
+- [x] **Task 7: Board Integration & Flying Rat Spawning / Hit Detection** (`bcaf94a`)
+  - Integrated periodic glider events in Campaign (Levels 4+) and Endless mode with screen-space mid-air mallet hit detection awarding +1,000 pts and instant power-up buffs.
+- [x] **Task 8: Full Verification, Documentation & Pull Request Creation**
+  - Updated `docs/LEVEL_DESIGN.md`, `docs/ART_AUDIO.md`, `README.md`, and `HANDOFF.md`; verified 544 automated tests passing.
 
 ---
 
@@ -40,7 +39,7 @@ All 18 planned milestones from `docs/superpowers/plans/2026-08-26-bonk-the-rat.m
    - 100% of audio clips (18 SFX + 5 music loops) are procedurally synthesized via DSP math in `tools/synth.gd` and `tools/generate_audio.gd`.
 
 2. **Automated Verification:**
-   - `make test` runs headless in ~6 seconds and validates 358 unit and smoke test checks with zero failures.
+   - `make test` runs headless in ~3 seconds and validates 544 unit and smoke test checks with zero failures.
 
 3. **Multiplatform Export Verified:**
    - `make export-linux` -> `export/linux/bonk-the-rat.x86_64`
@@ -53,7 +52,7 @@ All 18 planned milestones from `docs/superpowers/plans/2026-08-26-bonk-the-rat.m
 
 ```bash
 make run             # Launch the game directly in Godot
-make test            # Run complete automated headless test suite
+make test            # Run complete automated headless test suite (544 checks)
 make audio           # Regenerate procedural audio WAVs
 make levels          # Regenerate campaign and endless level resources
 make export-linux    # Build Linux release binary

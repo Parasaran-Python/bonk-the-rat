@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://flying_rat_actor_scene"]
+
+[ext_resource type="Script" path="res://src/game/flying_rat.gd" id="1_frat"]
+[ext_resource type="Script" path="res://src/game/flying_rat_visual.gd" id="2_vis"]
+
+[node name="FlyingRat" type="Node2D"]
+z_index = 200
+script = ExtResource("1_frat")
+
+[node name="Visual" type="Node2D" parent="."]
+script = ExtResource("2_vis")
