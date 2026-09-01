@@ -20,8 +20,12 @@ const DOWN_OFFSET := 130.0
 var state: State = State.GONE
 var rat_id: String = "norm"
 var hp_left: int = 1
+var expression: String = "normal"
 var _squash := Vector2.ONE
 var _tween: Tween = null
+var _blink_timer: float = 0.0
+var _next_blink_time: float = 2.0
+var _blink_duration: float = 0.15
 @onready var _visual: Node2D = $Visual if has_node("Visual") else null
 
 func _ready() -> void:
@@ -52,15 +56,29 @@ static func can_transition(from: State, to: State) -> bool:
 func scale_visual() -> Vector2:
 	return _squash
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
+	if state in [State.RISING, State.UP, State.SINKING]:
+		if expression != "dazed" and expression != "fleeing":
+			_blink_timer += delta
+			if _blink_timer >= _next_blink_time:
+				if _blink_timer < _next_blink_time + _blink_duration:
+					expression = "blinking"
+				else:
+					expression = "normal"
+					_blink_timer = 0.0
+					_next_blink_time = randf_range(1.5, 3.5)
 	if _visual != null and visible and state != State.GONE:
 		_visual.queue_redraw()
+
 
 func pop_up(id: String, speed_scale: float = 1.0) -> void:
 	rat_id = id
 	var type_info := RatTypes.get_type(id)
 	hp_left = int(type_info.get("hp", 1))
 	state = State.RISING
+	expression = "normal"
+	_blink_timer = 0.0
+	_next_blink_time = randf_range(1.2, 3.0)
 	_squash = Vector2.ONE
 	position.y = DOWN_OFFSET
 	visible = true
@@ -116,6 +134,7 @@ func strike() -> int:
 		return hp_left
 
 	hp_left -= 1
+	expression = "dazed"
 	if hp_left <= 0:
 		if _tween != null and _tween.is_valid():
 			_tween.kill()
@@ -150,6 +169,7 @@ func flee_early() -> void:
 	if _tween != null and _tween.is_valid():
 		_tween.kill()
 	state = State.FLEEING
+	expression = "fleeing"
 	_tween = create_tween()
 	_tween.tween_property(self, "position:y", DOWN_OFFSET, 0.12).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	_tween.tween_callback(func():
