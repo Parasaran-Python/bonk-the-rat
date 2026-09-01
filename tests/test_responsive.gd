@@ -30,6 +30,21 @@ func test_board_responsive_repositioning_and_scaling() -> void:
 
 	board.queue_free()
 
+func test_board_5x3_layout_fits_viewport() -> void:
+	var board: Node2D = load("res://src/game/board.tscn").instantiate()
+	if root != null:
+		root.add_child(board)
+	var cfg := LevelConfig.new()
+	cfg.grid_columns = 5
+	cfg.grid_rows = 3
+	board.setup(cfg)
+	board._reposition_holes()
+	eq(board._holes.size(), 15, "15 holes created")
+	for h in board._holes:
+		ok(h.position.x > 50.0 and h.position.x < 1230.0, "hole x inside screen bounds")
+		ok(h.position.y > 100.0 and h.position.y < 700.0, "hole y inside screen bounds")
+	board.queue_free()
+
 func test_zone_map_responsive_resizing() -> void:
 	var zm: ZoneMap = load("res://src/screens/zone_map.tscn").instantiate()
 	if root != null:

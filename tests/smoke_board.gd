@@ -13,6 +13,7 @@ func test_board_builds_and_director_runs_headless() -> void:
 	for i in range(120): # ~2 simulated seconds of frames
 		board._process(1.0 / 60.0)
 	ok(board.get_child_count() > 2, "board populated children")
+	ok(board._board_scale > 0.0 and board._board_scale <= 1.0, "board scale initialized")
 	var spawned := 0
 	for h in board._holes:
 		if h.occupied():

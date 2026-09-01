@@ -84,13 +84,13 @@ func _reposition_holes() -> void:
 	if vp_size.x <= 0 or vp_size.y <= 0:
 		vp_size = Vector2(1280, 720)
 
-	var base_spacing_x := 190.0
-	var base_spacing_y := 140.0
+	var base_spacing_x := 180.0
+	var base_spacing_y := 135.0
 	var total_w := float(cols - 1) * base_spacing_x + 180.0
 	var total_h := float(rows - 1) * base_spacing_y + 140.0
 
-	var max_w := vp_size.x * 0.90
-	var max_h := vp_size.y * 0.52
+	var max_w := vp_size.x * 0.92
+	var max_h := vp_size.y * 0.54
 	var scale_w := max_w / total_w if total_w > max_w else 1.0
 	var scale_h := max_h / total_h if total_h > max_h else 1.0
 	_board_scale = minf(1.0, minf(scale_w, scale_h))
