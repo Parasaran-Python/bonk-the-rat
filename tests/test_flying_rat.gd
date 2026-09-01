@@ -86,3 +86,71 @@ func test_flying_rat_bonk_signal_and_powerup() -> void:
 	eq(second_res, "", "second strike ignored")
 	eq(bonked_data.size(), 1, "no second bonked signal")
 	frat.queue_free()
+
+func test_board_swings_and_hits_flying_rat() -> void:
+	var board: Board = load("res://src/game/board.tscn").instantiate()
+	if root != null:
+		root.add_child(board)
+	var cfg: LevelConfig = load("res://src/data/levels/level_04.tres")
+	board.setup(cfg)
+	var frat: FlyingRat = board.spawn_flying_rat_for_test(Vector2(640, 180))
+	ok(frat != null, "flying rat spawned on board")
+	board.swing_at(Vector2(640, 180))
+	ok(not frat.can_be_hit(), "flying rat was hit by mallet swing")
+	board.queue_free()
+
+func test_board_flying_rat_awards_score_and_powerup() -> void:
+	var board: Board = load("res://src/game/board.tscn").instantiate()
+	if root != null:
+		root.add_child(board)
+	var cfg: LevelConfig = load("res://src/data/levels/level_04.tres")
+	board.setup(cfg)
+	Game.test_mode = true
+	Game.start_level(cfg)
+	var initial_score := Game.score
+	var bonked_events: Array = []
+	board.rat_bonked.connect(func(id, pts, pos): bonked_events.append([id, pts, pos]))
+	var powerups_started: Array = []
+	Game.powerup_started.connect(func(k, d): powerups_started.append([k, d]))
+	
+	var frat: FlyingRat = board.spawn_flying_rat_for_test(Vector2(600, 170), Vector2.RIGHT, 380.0, "freeze")
+	board.swing_at(Vector2(600, 170))
+	
+	eq(Game.score, initial_score + 1000, "+1000 awarded to score")
+	eq(bonked_events.size(), 1, "rat_bonked emitted once")
+	eq(bonked_events[0][0], "flying", "rat_id is flying")
+	eq(bonked_events[0][1], 1000, "points are 1000")
+	eq(powerups_started.size(), 1, "powerup started emitted")
+	eq(powerups_started[0][0], "freeze", "powerup kind is freeze")
+	board.queue_free()
+
+func test_board_flying_rat_miss_whiffs() -> void:
+	var board: Board = load("res://src/game/board.tscn").instantiate()
+	if root != null:
+		root.add_child(board)
+	var cfg: LevelConfig = load("res://src/data/levels/level_04.tres")
+	board.setup(cfg)
+	var frat: FlyingRat = board.spawn_flying_rat_for_test(Vector2(640, 180))
+	var whiff_emitted: Array[bool] = [false]
+	board.whiffed.connect(func(): whiff_emitted[0] = true)
+	board.swing_at(Vector2(100, 50))
+	ok(whiff_emitted[0], "whiffed signal emitted")
+	ok(frat.can_be_hit(), "flying rat still targetable after whiff")
+	board.queue_free()
+
+func test_board_flying_rat_spawning_progression() -> void:
+	var board: Board = load("res://src/game/board.tscn").instantiate()
+	if root != null:
+		root.add_child(board)
+	var cfg1: LevelConfig = load("res://src/data/levels/level_01.tres")
+	board.setup(cfg1)
+	ok(not board.has_flying_rat(), "no flying rat in level 1")
+	board.tick_flying_rat_spawner(50.0)
+	ok(not board.has_flying_rat(), "level 1 does not spawn flying rat over time")
+	
+	var cfg4: LevelConfig = load("res://src/data/levels/level_04.tres")
+	board.setup(cfg4)
+	board.tick_flying_rat_spawner(cfg4.duration_s * 0.4)
+	ok(board.has_flying_rat(), "level 4 spawned flying rat at milestone")
+	board.queue_free()
+
