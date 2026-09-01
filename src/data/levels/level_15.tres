@@ -6,11 +6,11 @@
 script = ExtResource("1_u2r2p")
 level_id = 15
 duration_s = 65.0
-grid_columns = 4
+grid_columns = 5
 grid_rows = 3
-max_concurrent = 6
-spawn_interval_start = 0.75
-spawn_interval_end = 0.45
+max_concurrent = 7
+spawn_interval_start = 0.65
+spawn_interval_end = 0.3
 rat_weights = {
 "boom": 8,
 "clock": 3,
@@ -21,8 +21,8 @@ rat_weights = {
 "whiskers": 8,
 "zoomer": 18
 }
-quota_star1 = 10800
-quota_star2 = 17000
-quota_star3 = 24000
+quota_star1 = 13000
+quota_star2 = 20000
+quota_star3 = 28000
 zone_theme = 3
 music_track = "zone3"

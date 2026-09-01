@@ -8,7 +8,7 @@ extends Resource
 @export var grid_rows: int = 2
 @export var max_concurrent: int = 1
 @export var spawn_interval_start: float = 1.40
-@export var spawn_interval_end: float = 1.05
+@export var spawn_interval_end: float = 0.95
 @export var rat_weights: Dictionary = {"norm": 95, "whiskers": 5}
 @export var quota_star1: int = 700
 @export var quota_star2: int = 1300

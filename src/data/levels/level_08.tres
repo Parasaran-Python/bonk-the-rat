@@ -8,8 +8,8 @@ level_id = 8
 duration_s = 60.0
 grid_rows = 3
 max_concurrent = 4
-spawn_interval_start = 0.98
-spawn_interval_end = 0.65
+spawn_interval_start = 0.95
+spawn_interval_end = 0.62
 rat_weights = {
 "clock": 3,
 "golden": 3,

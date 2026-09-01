@@ -6,10 +6,11 @@
 script = ExtResource("1_whhy4")
 level_id = 9
 duration_s = 60.0
+grid_columns = 4
 grid_rows = 3
 max_concurrent = 4
-spawn_interval_start = 0.94
-spawn_interval_end = 0.62
+spawn_interval_start = 0.92
+spawn_interval_end = 0.58
 rat_weights = {
 "golden": 4,
 "norm": 52,
@@ -18,8 +19,8 @@ rat_weights = {
 "whiskers": 7,
 "zoomer": 15
 }
-quota_star1 = 5200
-quota_star2 = 8300
-quota_star3 = 12100
+quota_star1 = 5400
+quota_star2 = 8600
+quota_star3 = 12500
 zone_theme = 2
 music_track = "zone2"

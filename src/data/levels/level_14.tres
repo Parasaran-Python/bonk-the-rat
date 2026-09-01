@@ -6,11 +6,11 @@
 script = ExtResource("1_lxu8q")
 level_id = 14
 duration_s = 65.0
-grid_columns = 4
+grid_columns = 5
 grid_rows = 3
-max_concurrent = 5
-spawn_interval_start = 0.78
-spawn_interval_end = 0.48
+max_concurrent = 6
+spawn_interval_start = 0.7
+spawn_interval_end = 0.36
 rat_weights = {
 "boom": 8,
 "clock": 3,
@@ -20,8 +20,8 @@ rat_weights = {
 "whiskers": 8,
 "zoomer": 18
 }
-quota_star1 = 9600
-quota_star2 = 15100
-quota_star3 = 21600
+quota_star1 = 11000
+quota_star2 = 17000
+quota_star3 = 24000
 zone_theme = 3
 music_track = "zone3"

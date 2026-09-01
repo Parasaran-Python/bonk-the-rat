@@ -9,7 +9,7 @@ duration_s = 55.0
 grid_rows = 3
 max_concurrent = 3
 spawn_interval_start = 1.05
-spawn_interval_end = 0.72
+spawn_interval_end = 0.7
 rat_weights = {
 "clock": 3,
 "norm": 70,
