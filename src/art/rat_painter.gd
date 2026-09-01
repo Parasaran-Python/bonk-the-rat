@@ -349,3 +349,150 @@ static func _draw_star_polygon(canvas: CanvasItem, center: Vector2, r: float, co
 		pts.append(center + Vector2(cos(angle), sin(angle)) * rad)
 	canvas.draw_colored_polygon(pts, col)
 
+static func draw_flying_rat(canvas: CanvasItem, t_anim: float = 0.0, is_hit: bool = false) -> void:
+	# 1. Wings (behind body)
+	var flap: float = sin(t_anim * 14.0)
+	if is_hit:
+		flap = sin(t_anim * 28.0) * 0.4
+	_draw_glider_wings(canvas, flap)
+
+	# 2. Dangling Golden Prize / Pouch
+	_draw_prize_pouch(canvas, t_anim)
+
+	# 3. Rat Body
+	var body_col := Color("64748b")
+	var belly_col := Color("94a3b8")
+	var pink_col := Color("f472b6")
+	var snout_col := Color("cbd5e1")
+
+	_draw_ears(canvas, body_col, pink_col, Vector2(-28, -66), Vector2(28, -66), 13.0)
+	canvas.draw_circle(Vector2(0, -36), 32.0, body_col)
+	canvas.draw_circle(Vector2(0, -28), 18.0, belly_col)
+
+	# Leather Aviator Helmet
+	var helmet_col := Color("451a03")
+	var helmet_dark := Color("291002")
+	var helmet_pts := PackedVector2Array([
+		Vector2(-30, -50), Vector2(-28, -78), Vector2(0, -86),
+		Vector2(28, -78), Vector2(30, -50), Vector2(24, -36),
+		Vector2(18, -38), Vector2(16, -52), Vector2(-16, -52),
+		Vector2(-18, -38), Vector2(-24, -36)
+	])
+	canvas.draw_colored_polygon(helmet_pts, helmet_col)
+	canvas.draw_polyline(helmet_pts, helmet_dark, 2.0)
+
+	# Chin strap & buckle
+	canvas.draw_line(Vector2(-24, -36), Vector2(-6, -20), helmet_col, 3.0)
+	canvas.draw_line(Vector2(24, -36), Vector2(6, -20), helmet_col, 3.0)
+	canvas.draw_line(Vector2(-7, -20), Vector2(7, -20), Color("d97706"), 3.0)
+
+	# Snout and whiskers
+	var expr := "dazed" if is_hit else "normal"
+	_draw_snout_and_teeth(canvas, snout_col, pink_col, expr)
+	_draw_whiskers_lines(canvas, Color(0.9, 0.9, 0.9, 0.8))
+
+	# Pilot Goggles
+	_draw_pilot_goggles(canvas, is_hit)
+
+	if is_hit:
+		_draw_dazed_stars(canvas, Vector2(0, -96))
+
+static func _draw_glider_wings(canvas: CanvasItem, flap: float) -> void:
+	var wing_dark := Color("1e293b")
+	var wing_skin := Color("334155")
+	var spar_col := Color("64748b")
+
+	# Left Wing
+	var left_joint := Vector2(-16, -32)
+	var left_elbow := Vector2(-42, -54 - flap * 22.0)
+	var left_tip := Vector2(-74, -38 - flap * 26.0)
+	var left_dip1 := Vector2(-58, -22 - flap * 14.0)
+	var left_dip2 := Vector2(-38, -18 - flap * 8.0)
+	var left_base := Vector2(-16, -24)
+
+	var left_pts := PackedVector2Array([
+		left_joint, left_elbow, left_tip, left_dip1, left_dip2, left_base
+	])
+	canvas.draw_colored_polygon(left_pts, wing_skin)
+	canvas.draw_polyline(left_pts, wing_dark, 2.0)
+	canvas.draw_line(left_joint, left_elbow, spar_col, 2.5)
+	canvas.draw_line(left_elbow, left_tip, spar_col, 2.0)
+	canvas.draw_line(left_elbow, left_dip1, spar_col, 1.5)
+	canvas.draw_line(left_joint, left_dip2, spar_col, 1.5)
+
+	# Right Wing (symmetric)
+	var right_joint := Vector2(16, -32)
+	var right_elbow := Vector2(42, -54 - flap * 22.0)
+	var right_tip := Vector2(74, -38 - flap * 26.0)
+	var right_dip1 := Vector2(58, -22 - flap * 14.0)
+	var right_dip2 := Vector2(38, -18 - flap * 8.0)
+	var right_base := Vector2(16, -24)
+
+	var right_pts := PackedVector2Array([
+		right_joint, right_elbow, right_tip, right_dip1, right_dip2, right_base
+	])
+	canvas.draw_colored_polygon(right_pts, wing_skin)
+	canvas.draw_polyline(right_pts, wing_dark, 2.0)
+	canvas.draw_line(right_joint, right_elbow, spar_col, 2.5)
+	canvas.draw_line(right_elbow, right_tip, spar_col, 2.0)
+	canvas.draw_line(right_elbow, right_dip1, spar_col, 1.5)
+	canvas.draw_line(right_joint, right_dip2, spar_col, 1.5)
+
+static func _draw_pilot_goggles(canvas: CanvasItem, is_hit: bool) -> void:
+	# Strap
+	canvas.draw_line(Vector2(-30, -54), Vector2(30, -54), Color("1e293b"), 4.5)
+	# Bridge
+	canvas.draw_line(Vector2(-5, -54), Vector2(5, -54), Color("b45309"), 3.5)
+
+	var left_eye := Vector2(-13, -54)
+	var right_eye := Vector2(13, -54)
+
+	for center in [left_eye, right_eye]:
+		# Brass outer frame
+		canvas.draw_circle(center, 8.5, Color("b45309"))
+		# Dark inner frame
+		canvas.draw_circle(center, 7.0, Color("1e293b"))
+		# Glass lens
+		canvas.draw_circle(center, 5.5, Color("38bdf8"))
+
+	if is_hit:
+		_draw_dazed_eyes(canvas, left_eye, right_eye, 5.0)
+	else:
+		for center in [left_eye, right_eye]:
+			canvas.draw_circle(center + Vector2(1.0, 0), 2.5, Color("0f172a"))
+			canvas.draw_line(center + Vector2(-3.5, -3.5), center + Vector2(1.0, 1.0), Color(1, 1, 1, 0.85), 1.6)
+			canvas.draw_circle(center + Vector2(2.5, 2.5), 1.0, Color(1, 1, 1, 0.7))
+
+static func _draw_prize_pouch(canvas: CanvasItem, t_anim: float) -> void:
+	var swing: float = sin(t_anim * 6.0) * 3.0
+	var pouch_center := Vector2(swing, 18.0)
+
+	# Suspension straps
+	canvas.draw_line(Vector2(-10, -18), Vector2(-6 + swing, 10), Color("78350f"), 1.8)
+	canvas.draw_line(Vector2(10, -18), Vector2(6 + swing, 10), Color("78350f"), 1.8)
+
+	# Glowing aura
+	canvas.draw_circle(pouch_center, 18.0, Color(1.0, 0.85, 0.2, 0.25))
+
+	# Cheese wedge polygon
+	var cheese_pts := PackedVector2Array([
+		Vector2(-14 + swing, 24),
+		Vector2(14 + swing, 24),
+		Vector2(0 + swing, 8)
+	])
+	canvas.draw_colored_polygon(cheese_pts, Color("fbbf24"))
+	canvas.draw_polyline(PackedVector2Array([
+		cheese_pts[0], cheese_pts[1], cheese_pts[2], cheese_pts[0]
+	]), Color("d97706"), 2.0)
+
+	# Cheese holes
+	canvas.draw_circle(pouch_center + Vector2(-4, 2), 2.5, Color("d97706"))
+	canvas.draw_circle(pouch_center + Vector2(4, 3), 1.8, Color("d97706"))
+	canvas.draw_circle(pouch_center + Vector2(0, -3), 1.5, Color("d97706"))
+
+	# Sparkling star glints
+	var glint_pulse: float = (sin(t_anim * 8.0) + 1.0) * 0.5
+	_draw_star_polygon(canvas, pouch_center + Vector2(12, -4), 3.0 + glint_pulse * 2.0, Color.WHITE)
+	_draw_star_polygon(canvas, pouch_center + Vector2(-12, 4), 2.0 + (1.0 - glint_pulse) * 1.5, Color("fef08a"))
+
+
