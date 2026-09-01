@@ -2,7 +2,67 @@ class_name FxLayer
 extends Node2D
 ## Visual and haptic feedback layer for impact bursts, screen shake, hit-stop and confetti.
 
+class ShockwaveRing extends Node2D:
+	var radius: float = 8.0:
+		set(v):
+			radius = v
+			queue_redraw()
+	var ring_color: Color = Color("fbbf24"):
+		set(v):
+			ring_color = v
+			queue_redraw()
+	var line_width: float = 3.5:
+		set(v):
+			line_width = v
+			queue_redraw()
+
+	func _draw() -> void:
+		if radius > 0.0 and line_width > 0.0:
+			draw_arc(Vector2.ZERO, radius, 0.0, TAU, 36, ring_color, line_width, true)
+			if radius > 12.0:
+				var inner_color := ring_color
+				inner_color.a *= 0.35
+				draw_arc(Vector2.ZERO, maxf(1.0, radius - 4.0), 0.0, TAU, 28, inner_color, maxf(1.0, line_width * 0.5), true)
+
 var _shake_tween: Tween = null
+
+func shockwave(pos: Vector2, color: Color = Color("fbbf24")) -> void:
+	var ring := ShockwaveRing.new()
+	ring.position = pos
+	ring.ring_color = color
+	ring.radius = 8.0
+	ring.line_width = 3.5
+	add_child(ring)
+
+	if is_inside_tree():
+		var tween := ring.create_tween().set_parallel(true)
+		tween.tween_property(ring, "radius", 52.0, 0.25).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		tween.tween_property(ring, "line_width", 0.6, 0.25)
+		tween.tween_property(ring, "modulate:a", 0.0, 0.25).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+		tween.chain().tween_callback(ring.queue_free)
+
+func impact_sparks(pos: Vector2, strong: bool = false) -> void:
+	var sparks := CPUParticles2D.new()
+	sparks.position = pos
+	sparks.emitting = false
+	sparks.one_shot = true
+	sparks.explosiveness = 0.92
+	sparks.lifetime = 0.25 if not strong else 0.38
+	sparks.amount = 10 if not strong else 18
+	sparks.direction = Vector2.UP
+	sparks.spread = 45.0
+	sparks.initial_velocity_min = 160.0 if not strong else 260.0
+	sparks.initial_velocity_max = 280.0 if not strong else 400.0
+	sparks.gravity = Vector2(0, 480)
+	sparks.scale_amount_min = 2.0 if not strong else 3.5
+	sparks.scale_amount_max = 4.5 if not strong else 7.0
+	sparks.color = Color("ffffff") if not strong else Color("fef08a")
+	add_child(sparks)
+	sparks.emitting = true
+
+	if is_inside_tree():
+		var timer := get_tree().create_timer(sparks.lifetime + 0.1)
+		timer.timeout.connect(sparks.queue_free)
 
 func impact(pos: Vector2, strong: bool = false) -> void:
 	var burst := CPUParticles2D.new()
@@ -25,6 +85,9 @@ func impact(pos: Vector2, strong: bool = false) -> void:
 	if is_inside_tree():
 		var timer := get_tree().create_timer(burst.lifetime + 0.1)
 		timer.timeout.connect(burst.queue_free)
+
+	shockwave(pos, Color("fbbf24") if strong else Color("fef08a"))
+	impact_sparks(pos, strong)
 
 	if OS.get_name() == "Android" and Input.has_method("vibrate_handheld"):
 		Input.vibrate_handheld(35 if strong else 18)
